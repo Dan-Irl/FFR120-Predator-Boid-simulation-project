@@ -1,4 +1,4 @@
-#class that defines the boids and their behaviour
+#class that defines the boid and their behaviour
 class boid:
     def __init__(self,x,y,z):
        self.x = x
@@ -8,7 +8,7 @@ class boid:
        self.vy = 0
        self.vz = 0
        
-    #function that updates the position of the boids
+    #function that updates the position of the boid
     def updatePosition(self):
         self.x += self.x + self.vx
         self.y += self.y + self.vy
