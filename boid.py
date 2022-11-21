@@ -1,14 +1,15 @@
 #class that defines the boid and their behaviour
 class boid:
-    def __init__(self,x:int,y:int,z:int,vx:int,vy:int,vz:int,smallflock:list,largeflock:list,predators:list):
+    def __init__(self,x:int,y:int,z:int,vx:int,vy:int,vz:int):
        self.x = x
        self.y = y
        self.z = z
        self.vx = vx
        self.vy = vy
        self.vz = vz
-       self.smallflock = smallflock
-       self.largeflock = largeflock
+       self.smallflock = []
+       self.largeflock = []
+       self.predators = []
        
     #function that updates the position of the boid
     def updatePosition(self):
