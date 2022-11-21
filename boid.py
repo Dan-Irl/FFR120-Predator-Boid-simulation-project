@@ -13,3 +13,8 @@ class boid:
         self.x += self.x + self.vx
         self.y += self.y + self.vy
         self.z += self.z + self.vz
+        
+    def updateVelocity(self):
+        self.vx = self.vx + self.vx
+        self.vy = self.vy + self.vy
+        self.vz = self.vz + self.vz
