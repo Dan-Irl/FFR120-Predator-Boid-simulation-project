@@ -10,6 +10,10 @@ class boid:
        self.smallflock = []
        self.largeflock = []
        self.predators = []
+    
+    #function that returns the position of the boid
+    def getPosition(self):
+        return (self.x,self.y,self.z)
        
     #function that updates the position of the boid
     def updatePosition(self):
