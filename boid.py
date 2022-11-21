@@ -1,20 +1,37 @@
 #class that defines the boid and their behaviour
 class boid:
-    def __init__(self,x,y,z):
+    def __init__(self,x,y,z,vx,vy,vz,smallflock,largeflock,predators):
        self.x = x
        self.y = y
        self.z = z
-       self.vx = 0
-       self.vy = 0
-       self.vz = 0
+       self.vx = vx
+       self.vy = vy
+       self.vz = vz
+       self.smallflock = smallflock
+       self.largeflock = largeflock
        
     #function that updates the position of the boid
     def updatePosition(self):
         self.x += self.x + self.vx
         self.y += self.y + self.vy
         self.z += self.z + self.vz
-        
+    
     def updateVelocity(self):
-        self.vx = self.vx + self.vx
-        self.vy = self.vy + self.vy
-        self.vz = self.vz + self.vz
+        #cohesion
+        xcom = np.mean([i.x for i in largeflock])
+        ycom = np.mean([i.y for i in largeflock])
+        zcom = np.mean([i.z for i in largeflock])
+        
+        cx = xcom-self.x
+        cy = ycom-self.y
+        cz = zcom-self.z
+        
+        #separation
+        #alignment
+        
+        self.vx += Ccohesion*cx
+        self.vy += Ccohesion*cy
+        self.vz += Ccohesion*cz
+        
+        
+        
