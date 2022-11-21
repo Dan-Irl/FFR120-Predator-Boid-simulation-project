@@ -1,5 +1,5 @@
 #class that defines the boid and their behaviour
-class boid:
+class Boid:
     def __init__(self,x:int,y:int,z:int,vx:int,vy:int,vz:int):
        self.x = x
        self.y = y
