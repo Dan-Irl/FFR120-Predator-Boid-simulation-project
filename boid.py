@@ -1,6 +1,6 @@
 #class that defines the boid and their behaviour
 class boid:
-    def __init__(self,x,y,z,vx,vy,vz,smallflock,largeflock,predators):
+    def __init__(self,x:int,y:int,z:int,vx:int,vy:int,vz:int,smallflock:list,largeflock:list,predators:list):
        self.x = x
        self.y = y
        self.z = z
