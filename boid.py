@@ -63,5 +63,14 @@ class Boid:
         self.vy = self.vy*v0/v
         self.vz = self.vz*v0/v
         
+    def updateSmallFlock(self,boids:list,neighbours:list):
+        self.smallflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]
+        
+    def updateLargeFlock(self,boids:list,neighbours:list):
+        self.smallflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]
+        
+    def updatePredators(self,predators:list,neighbours:list):
+        self.smallflock = [predators[neighbour] for neighbour in neighbours[predators.index(self)]]
+        
         
         
