@@ -40,6 +40,42 @@ def test_findNeighbours():
     assert testBoid3 not in testBoid1.smallflock, "smallflock not updated correctly"
     
     
+def test_updateSmallFlock():
+    r = 2
+    L = 10
+    testBoid1 = Boid(0,0,0,1,-1,0)
+    testBoid2 = Boid(1,0,0,1,-1,0)
+    testBoid3 = Boid(2,2,2,1,-1,0)
+    
+    boids = [testBoid1, testBoid2, testBoid3]
+    
+    neighbours = findNeighbours(boids, r, L)
+    
+    testBoid1.updateSmallFlock(boids, neighbours)
+    
+    assert testBoid1 in testBoid1.smallflock, "smallflock not updated correctly"
+    assert testBoid2 in testBoid1.smallflock, "smallflock not updated correctly"
+    
+    
+def test_updateLargeFlock():
+    r = 10
+    L = 10
+    testBoid1 = Boid(0,0,0,1,-1,0)
+    testBoid2 = Boid(1,6,0,1,-1,0)
+    testBoid3 = Boid(2,4,2,1,-1,0)
+    
+    boids = [testBoid1, testBoid2, testBoid3]
+    
+    neighbours = findNeighbours(boids, r, L)
+    
+    testBoid1.updateLargeFlock(boids, neighbours)
+    
+    assert testBoid1 in testBoid1.smallflock, "smallflock not updated correctly"
+    assert testBoid2 in testBoid1.smallflock, "smallflock not updated correctly"
+    assert testBoid3 in testBoid1.smallflock, "smallflock not updated correctly"
+    
+    
+    
     
     
     
