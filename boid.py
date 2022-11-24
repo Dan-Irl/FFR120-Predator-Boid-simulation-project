@@ -3,8 +3,7 @@
 import numpy as np
 class Boid:
     def __init__(self,x:float,y:float,z:float,v0:float,c_cohesion:float,c_alignment:float,c_separation:float,c_predators:float,c_food:float,dt:float):
-        
-        
+            
         self.x = x
         self.y = y
         self.z = z
@@ -36,30 +35,52 @@ class Boid:
     #function that updates the position of the boid using cohesion, separation,
     #alignment, predators, food
     def updateVelocity(self):
-        #cohesion
-        cx = np.mean([i.x for i in self.largeflock])-self.x
-        cy = np.mean([i.y for i in self.largeflock])-self.y
-        cz = np.mean([i.z for i in self.largeflock])-self.z
+        if len(self.largeflock)>0:
+            #cohesion
+            cx = np.mean([i.x for i in self.largeflock])-self.x
+            cy = np.mean([i.y for i in self.largeflock])-self.y
+            cz = np.mean([i.z for i in self.largeflock])-self.z
+            #alignment
+            lx = 1/len(self.largeflock)*sum([i.vx for i in self.largeflock])
+            ly = 1/len(self.largeflock)*sum([i.vy for i in self.largeflock])
+            lz = 1/len(self.largeflock)*sum([i.vz for i in self.largeflock])
+        else:
+            cx = 0
+            cy = 0
+            cz = 0
+            lx = 0
+            ly = 0
+            lz = 0
         
-        #separation
-        sx = sum([self.x-i.x for i in self.smallflock])
-        sy = sum([self.y-i.y for i in self.smallflock])
-        sz = sum([self.z-i.z for i in self.smallflock])
-
-        #alignment
-        lx = 1/len(self.largeflock)*sum([i.vx for i in self.largeflock])
-        ly = 1/len(self.largeflock)*sum([i.vy for i in self.largeflock])
-        lz = 1/len(self.largeflock)*sum([i.vz for i in self.largeflock])
+        if len(self.smallflock)>0:
+            #separation
+            sx = sum([self.x-i.x for i in self.smallflock])
+            sy = sum([self.y-i.y for i in self.smallflock])
+            sz = sum([self.z-i.z for i in self.smallflock])  
+        else:
+            sx = 0
+            sy = 0
+            sz = 0
         
-        #predator
-        px = sum([self.x-i.x for i in self.predatorflock])
-        py = sum([self.y-i.y for i in self.predatorflock])
-        pz = sum([self.z-i.z for i in self.predatorflock])
-
-        #food
-        fx = np.mean([i.x for i in self.foodlist])-self.x
-        fy = np.mean([i.y for i in self.foodlist])-self.y
-        fz = np.mean([i.z for i in self.foodlist])-self.z
+        if len(self.predatorflock)>0:
+            #predator
+            px = sum([self.x-i.x for i in self.predatorflock])
+            py = sum([self.y-i.y for i in self.predatorflock])
+            pz = sum([self.z-i.z for i in self.predatorflock])
+        else:
+            px = 0
+            py = 0
+            pz = 0
+        
+        if len(self.foodlist)>0:
+            #food
+            fx = np.mean([i.x for i in self.foodlist])-self.x
+            fy = np.mean([i.y for i in self.foodlist])-self.y
+            fz = np.mean([i.z for i in self.foodlist])-self.z
+        else:
+            fx = 0
+            fy = 0
+            fz = 0
 
         #update
         self.vx += (self.c_cohesion*cx + self.c_separation*sx + self.c_alignment*lx + self.c_predators*px + self.c_food*fx)*self.dt
@@ -74,10 +95,10 @@ class Boid:
         self.smallflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]
         
     def updateLargeFlock(self,boids:list,neighbours:list):
-        self.smallflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]
+        self.largeflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]
         
     def updatePredators(self,predators:list,neighbours:list):
-        self.smallflock = [predators[neighbour] for neighbour in neighbours[predators.index(self)]]
+        self.predatorflock = [predators[neighbour] for neighbour in neighbours[predators.index(self)]]
         
     def updateFoodFlock(self,food:list,neighbours:list):
         self.foodlist = [food[neighbour] for neighbour in neighbours[food.index(self)]]
