@@ -17,6 +17,7 @@ class Boid:
         self.c_alignment = c_alignment
         self.c_predators = c_predators
         self.c_food = c_food
+        self.dt = dt
         self.smallflock = []
         self.largeflock = []
         self.predatorflock = []
