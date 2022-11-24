@@ -1,4 +1,5 @@
 #class that defines the boid and their behaviour
+import numpy as np
 class Boid:
     def __init__(self,x:int,y:int,z:int,vx:int,vy:int,vz:int):
        self.x = x
@@ -25,7 +26,6 @@ class Boid:
     #function that updates the position of the boid using cohesion, separation,
     #alignment, predators, food
     def updateVelocity(self):
-        import numpy as np
         Ccohesion = 1
         Calignment = 1
         Cseparation = 1
