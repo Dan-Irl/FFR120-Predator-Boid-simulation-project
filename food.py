@@ -3,17 +3,19 @@ import numpy as np
 
 # Class food
 class Food():
-    def __init__(self, x, y, z, L):
+    def __init__(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
-        self.L = L
+        
+    
    
 # Function for food spawning
-def food_spawn(self, number_of_food, food_list):
+def food_spawn(self, number_of_food, food_list,L):
     for i in range(number_of_food):
-        x = np.random.random() * self.L
-        y = np.random.random() * self.L
-        z = np.random.random() * self.L
+        x = np.random.random() * L
+        y = np.random.random() * L
+        z = np.random.random() * L
         food_list.append(Food(x,y,z))
     return food_list
+

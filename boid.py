@@ -1,17 +1,26 @@
 #class that defines the boid and their behaviour
+
 import numpy as np
 class Boid:
-    def __init__(self,x:int,y:int,z:int,vx:int,vy:int,vz:int):
-       self.x = x
-       self.y = y
-       self.z = z
-       self.vx = vx
-       self.vy = vy
-       self.vz = vz
-       self.smallflock = []
-       self.largeflock = []
-       self.predatorflock = []
-       self.foodflock = []
+    def __init__(self,x:float,y:float,z:float,v0:float,c_cohesion:float,c_alignment:float,c_separation:float,c_predators:float,c_food:float,dt:float):
+        
+        
+        self.x = x
+        self.y = y
+        self.z = z
+        self.vx = v0
+        self.vy = v0
+        self.vz = v0
+        self.v0 = v0
+        self.c_cohesion = c_cohesion
+        self.c_separation = c_separation
+        self.c_alignment = c_alignment
+        self.c_predators = c_predators
+        self.c_food = c_food
+        self.smallflock = []
+        self.largeflock = []
+        self.predatorflock = []
+        self.foodlist = []
     
     #function that returns the position of the boid
     def getPosition(self):
@@ -26,13 +35,6 @@ class Boid:
     #function that updates the position of the boid using cohesion, separation,
     #alignment, predators, food
     def updateVelocity(self):
-        Ccohesion = 1
-        Calignment = 1
-        Cseparation = 1
-        Cpredators = 1
-        Cfood = 1
-        dt = 0.01
-        v0 = 1
         #cohesion
         cx = np.mean([i.x for i in self.largeflock])-self.x
         cy = np.mean([i.y for i in self.largeflock])-self.y
@@ -54,18 +56,18 @@ class Boid:
         pz = sum([self.z-i.z for i in self.predatorflock])
 
         #food
-        fx = np.mean([i.x for i in self.foodflock])-self.x
-        fy = np.mean([i.y for i in self.foodflock])-self.y
-        fz = np.mean([i.z for i in self.foodflock])-self.z
+        fx = np.mean([i.x for i in self.foodlist])-self.x
+        fy = np.mean([i.y for i in self.foodlist])-self.y
+        fz = np.mean([i.z for i in self.foodlist])-self.z
 
         #update
-        self.vx += (Ccohesion*cx + Cseparation*sx + Calignment*lx + Cpredators*px + Cfood*fx)*dt
-        self.vy += (Ccohesion*cy + Cseparation*sy + Calignment*ly + Cpredators*py + Cfood*fy)*dt
-        self.vz += (Ccohesion*cz + Cseparation*sz + Calignment*lz + Cpredators*pz + Cfood*fz)*dt
+        self.vx += (self.c_cohesion*cx + self.c_separation*sx + self.c_alignment*lx + self.c_predators*px + self.c_food*fx)*self.dt
+        self.vy += (self.c_cohesion*cy + self.c_separation*sy + self.c_alignment*ly + self.c_predators*py + self.c_food*fy)*self.dt
+        self.vz += (self.c_cohesion*cz + self.c_separation*sz + self.c_alignment*lz + self.c_predators*pz + self.c_food*fz)*self.dt
         v = np.sqrt(self.vx**2+self.vy**2+self.vz**2)
-        self.vx = self.vx*v0/v
-        self.vy = self.vy*v0/v
-        self.vz = self.vz*v0/v
+        self.vx = self.vx*self.v0/v
+        self.vy = self.vy*self.v0/v
+        self.vz = self.vz*self.v0/v
         
     def updateSmallFlock(self,boids:list,neighbours:list):
         self.smallflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]

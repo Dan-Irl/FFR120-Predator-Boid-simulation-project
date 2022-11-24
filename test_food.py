@@ -1,4 +1,4 @@
-from food import food
+from food import Food
 
 # Unit test for food.py
 
