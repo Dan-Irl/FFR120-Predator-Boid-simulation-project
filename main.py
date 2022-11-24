@@ -1,6 +1,6 @@
 from boid import Boid
 from predator import Predator
-from food import Food
+from food import Food, food_spawn
 import numpy as np
 
 #Parameters
@@ -21,11 +21,13 @@ r_B = 10 # radius of boid sensing
 r_S = 2 # radius of separation
 v_predator = 2 # velocity
 
+#food parameters
+number_of_food = 2
 
 
 boids = [Boid for _ in range(N_boids)]
 predators = [Predator for _ in range(N_predators)]
-food = [Predator for _ in range(N_predators)]
+food = [Food for _ in range(N_predators)]
 
 
 boid_history = [len(boids)]
@@ -35,10 +37,17 @@ food_history = []
 for gen in range(Generations):
     boid_small_neighbours = findNeighbours(boids, r, L)
     boid_large_neighbours = findNeighbours(boids, r, L)
+    
+    
+    
     boid_food_location = findNeighbours(boids, r, L)
     boid_food_consumed = findNeighbours(boids, r, L)
     boid_predator_neighbours = findNeighbours(boids, r, L)
     predator_boid_neighbours = findNeighbours(predators, r, L)
+    
+    
+    # 1. Update consumptions using consumption neighbour lists
+    # 2. Update positions of individuals that are left
     
 
     
@@ -56,6 +65,7 @@ for gen in range(Generations):
 
     for food in food:
         #Check if food is eaten and add boid to its location
+        food_list = food_spawn(number_of_food,food_list,L)
         food.updatePosition()
         
     boid_history.append(len(boids))
