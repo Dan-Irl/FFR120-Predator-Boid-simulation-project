@@ -1,6 +1,6 @@
 # class that defines the predators and their behaviour
 
-class predator:
+class Predator:
     def __init__(self,x,y,z):
        self.x = x
        self.y = y
