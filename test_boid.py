@@ -1,26 +1,18 @@
 from boid import Boid
-from find_neighbours import findNeighbours
+from find_neighbours import findNeighbours, findTarget
+from food import Food
 
 # Unit test for boid.py
 
 # Check here how to write tests (install pytest first):
 # https://docs.pytest.org/en/latest/
-
-
-def test_updatePosition():
-    testBoid = Boid(0,0,0,1,-1,0)
-    testBoid.updatePosition()
-
-    assert testBoid.x == 1, "x position not updated correctly"
-    assert testBoid.y == -1, "y position not updated correctly"
-    assert testBoid.z == -0, "z position not updated correctly"
     
 def test_findNeighbours():
     r = 2
     L = 10
-    testBoid1 = Boid(0,0,0,1,-1,0)
-    testBoid2 = Boid(1,0,0,1,-1,0)
-    testBoid3 = Boid(2,2,2,1,-1,0)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
+    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1)
+    testBoid3 = Boid(3,9,4,1,1,1,1,1,1,1)
     
     boids = [testBoid1, testBoid2, testBoid3]
     
@@ -28,12 +20,6 @@ def test_findNeighbours():
     
     for boid in boids:
         boid.smallflock = [boids[neighbour] for neighbour in neighbours[boids.index(boid)]]
-        
-    print(testBoid1)
-    print(testBoid2)
-    print(testBoid3)
-    print(testBoid1.smallflock)
-    print(testBoid2.smallflock)
     
     assert testBoid1 in testBoid1.smallflock, "smallflock not updated correctly"
     assert testBoid2 in testBoid1.smallflock, "smallflock not updated correctly"
@@ -41,11 +27,11 @@ def test_findNeighbours():
     
     
 def test_updateSmallFlock():
-    r = 2
+    r = 5
     L = 10
-    testBoid1 = Boid(0,0,0,1,-1,0)
-    testBoid2 = Boid(1,0,0,1,-1,0)
-    testBoid3 = Boid(2,2,2,1,-1,0)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
+    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1)
+    testBoid3 = Boid(0,0,0,1,1,1,1,1,1,1)
     
     boids = [testBoid1, testBoid2, testBoid3]
     
@@ -58,11 +44,11 @@ def test_updateSmallFlock():
     
     
 def test_updateLargeFlock():
-    r = 10
+    r = 5
     L = 10
-    testBoid1 = Boid(0,0,0,1,-1,0)
-    testBoid2 = Boid(1,6,0,1,-1,0)
-    testBoid3 = Boid(2,4,2,1,-1,0)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
+    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1)
+    testBoid3 = Boid(0,3,2,1,1,1,1,1,1,1)
     
     boids = [testBoid1, testBoid2, testBoid3]
     
@@ -70,12 +56,31 @@ def test_updateLargeFlock():
     
     testBoid1.updateLargeFlock(boids, neighbours)
     
-    assert testBoid1 in testBoid1.smallflock, "smallflock not updated correctly"
-    assert testBoid2 in testBoid1.smallflock, "smallflock not updated correctly"
-    assert testBoid3 in testBoid1.smallflock, "smallflock not updated correctly"
+    assert testBoid1 in testBoid1.largeflock, "largeflock not updated correctly"
+    assert testBoid2 in testBoid1.largeflock, "largeflock not updated correctly"
+    assert testBoid3 in testBoid1.largeflock, "largeflock not updated correctly"
     
     
+def test_findFood():
+    r = 10
+    L = 20
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
+    testBoid2 = Boid(10,10,10,1,1,1,1,1,1,1)
+    testBoid3 = Boid(0,0,2,1,1,1,1,1,1,1)
     
+    food1 = Food(1,1,1)
+    food2 = Food(10,10,11)
+
+    boids = [testBoid1, testBoid2, testBoid3]
+
+    foods = [food1,food2]
+
+    closestFood = findTarget(boids,foods,r,L)
     
+    #Sets the closest food for each boid if it is within range
+    for boid in boids:
+        boid.foodlist = closestFood[boids.index(boid)]
     
-    
+    assert food1 == testBoid1.foodlist, "closest food not found"
+    assert food2 == testBoid2.foodlist, "closest food not found"
+    assert food1 == testBoid3.foodlist, "closest food not found"
