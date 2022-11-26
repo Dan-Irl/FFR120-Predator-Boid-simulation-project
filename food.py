@@ -8,6 +8,9 @@ class Food():
         self.y = y
         self.z = z
         
+    def getPosition(self,):
+        return (self.x, self.y, self.z)
+        
     
    
 # Function for food spawning
