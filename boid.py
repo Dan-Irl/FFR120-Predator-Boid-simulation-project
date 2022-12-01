@@ -21,6 +21,11 @@ class Boid:
         self.largeflock = []
         self.predatorflock = []
         self.foodlist = []
+
+    # enables checking equality of boids, among other things
+    def __eq__(self, other):
+        if isinstance(other, Boid):
+            return self.x == other.x and self.y == other.y and self.z == other.z
     
     #function that returns the position of the boid
     def getPosition(self):

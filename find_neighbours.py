@@ -20,5 +20,13 @@ def findTarget(Individuals:list,Targets:list,range:int,boundingBox:int) -> list:
     positions = np.array([individual.getPosition() for individual in Individuals])
     targets = np.array([target.getPosition() for target in Targets])
     tree = KDTree(targets,boxsize=boundingBox)
-    
-    return [Targets[index[0]] for index in tree.query_ball_point(positions, range)]
+
+    # return [Targets[index[0]] for index in tree.query_ball_point(positions, range)]
+    # Alternative, handling the case where there are no targets in range //Jesper
+    targetList = []
+    for index in tree.query_ball_point(positions, range):
+        if index != []:
+            targetList.append(Targets[index[0]])
+        else:
+            targetList.append(None)
+    return targetList

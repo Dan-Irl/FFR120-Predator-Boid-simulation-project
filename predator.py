@@ -1,8 +1,9 @@
 # class that defines the predators and their behaviour
 import numpy as np
+from math import dist
 
 class Predator:
-    def __init__(self,x:float,y:float,z:float,v0:float,dt:float):
+    def __init__(self,x:float,y:float,z:float,v0:float,sensingRange:float,dt:float):
         self.x = x
         self.y = y
         self.z = z
@@ -12,30 +13,31 @@ class Predator:
         self.vy = v0
         self.vz = v0
         self.health = 100
+        self.sensingRange = sensingRange
         self.chasing = False     
-        self.chased_boid = None
+        self.chasedBoid = None
         self.resting = False
        
-    def get_position(self):
+    def getPosition(self):
         return (self.x,self.y,self.z)
 
-    def get_health(self):
+    def getHealth(self):
         return self.health
 
-    def get_chasing(self):
+    def getChasing(self):
         return self.chasing
 
-    def get_chased_boid(self):
-        return self.chased_boid
+    def getChasedBoid(self):
+        return self.chasedBoid
 
     # function that updates the position of the predator
-    def update_position(self):
+    def updatePosition(self):
         self.x += self.vx*self.dt
         self.y += self.vy*self.dt
         self.z += self.vz*self.dt
 
     # function that updates the velocity of the predator
-    def update_velocity(self):
+    def updateVelocity(self):
         if self.resting == True:
             self.vx = 0
             self.vy = 0
@@ -60,34 +62,50 @@ class Predator:
             self.vz = self.vz*self.v0/v_norm
 
     # immobilize predator for a certain amount of time
-    def rest():
+    def rest(self):
         self.resting = True
 
     # function that checks whether the predator is resting
-    def check_resting(self):
+    def checkResting(self):
         return self.resting
     
     def awaken(self):
         self.resting = False
 
-    # function that checks whether the predator is chasing a prey
-    def check_chasing(self, boid_neighbours):
-        if len(neighbours) > 0:     # check if there are any boids in range
+    # function that checks whether the target is in range of the predator
+    def checkRangeAndChase(self, boid_target):
+        # check if the target is in range of the predator
+        if boid_target != None:
             self.chasing = True
-            self.chased_boid = neighbours[0]     # assumes sorted by distance
-        else:                           # if the predator is chasing a prey
-            self.chasing = False
+            self.chasedBoid = boid_target
+            return True
+        else:
+            return False
+
+
+    # function that checks whether the predator is chasing a prey
+    def getChasing(self):
+        return self.chasing
     
+    # function that checks whether the predator has caught a prey
+    def checkCatch(self, boid_catch):
+        if boid_catch != None:
+            self.feed()
+            return True
+        else:
+            return False
+
+
     # function that feeds the predator upon health every time step
     def feed(self):
         self.health += 10
 
     # function that decays the predator's health every time step
-    def health_decay(self):
+    def healthDecay(self):
         self.health -= 1*self.dt
 
     # function that checks whether the predator is dead
-    def check_dead(self):
+    def checkDead(self):
         if self.health <= 0:
             return True
         else:
