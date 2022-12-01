@@ -1,7 +1,7 @@
 from predator import Predator
 from boid import Boid
 import numpy as np
-from find_neighbours import findTarget
+from find_neighbours import findClosestTarget
 
 # Unit test for predator.py
 
@@ -37,7 +37,7 @@ def test_CheckRangeAndChase():
     test_boids = [Boid(10,10,10,1,1,1,1,1,1,1)] 
     test_predators = [Predator(0,0,0,1,10,1)]
 
-    boid_targets = findTarget(test_predators, test_boids, r_B, L)
+    boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
     assert boid_targets[0] == None, "Boid should not be in range"
     assert test_predators[0].chasing == False, "Predator should not be chasing"
@@ -48,7 +48,7 @@ def test_CheckRangeAndChase():
     test_predators = [Predator(0,0,0,1,10,1)]
     test_boids = [Boid(49,49,49,1,1,1,1,1,1,1), Boid(5,5,5,1,1,1,1,1,1,1)]
 
-    boid_targets = findTarget(test_predators, test_boids, r_B, L)
+    boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
     assert boid_targets[0] == test_boids[1], "Boid should be in range"
     assert test_predators[0].checkRangeAndChase(boid_targets[0]) == True, "Predator should be chasing"
@@ -59,25 +59,24 @@ def test_CheckRangeAndChase():
     test_predators = [Predator(0,0,0,1,10,1)]
     test_boids = [Boid(49,49,49,1,1,1,1,1,1,1), Boid(5,5,5,1,1,1,1,1,1,1), Boid(2,2,2,1,1,1,1,1,1,1)]
 
-    boid_targets = findTarget(test_predators, test_boids, r_B, L)
+    boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
     assert boid_targets[0] == test_boids[2], "Should chase closest boid in range"
+    assert test_predators[0].checkRangeAndChase(boid_targets[0]) == True, "Predator should be chasing"
     assert test_predators[0].chasing == True, "Predator should be chasing"
     assert test_predators[0].chasedBoid == test_boids[2], "Predator should have a chased boid"
-    assert test_predators[0].checkRangeAndChase(boid_targets[0]) == True, "Predator should be chasing"
 
     ## test with multiple predators ##
     test_predators = [Predator(0,0,0,1,10,1), Predator(20,20,20,1,10,1)]
     test_boids = [Boid(49,49,49,1,1,1,1,1,1,1), Boid(5,5,5,1,1,1,1,1,1,1), Boid(15,15,15,1,1,1,1,1,1,1)]
 
-    boid_targets = findTarget(test_predators, test_boids, r_B, L)
+    boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
     for predator in test_predators:
         assert predator.checkRangeAndChase(boid_targets[test_predators.index(predator)]) == True, "Predator should be chasing"
 
-    assert test_predators[0].chased_boid == test_boids[1], "Predator should have a chased boid"
-    assert test_predators[1].chased_boid == test_boids[2], "Predator should have a chased boid"   
-    assert test_predator.chased_boid == test_boids[0], "Predator should have a chased boid"
+    assert test_predators[0].chasedBoid == test_boids[1], "Predator should have a chased boid"
+    assert test_predators[1].chasedBoid == test_boids[2], "Predator should have a chased boid"   
 
 def test_checkCatch():
     r_S = 2  # range of boid catching
@@ -87,7 +86,7 @@ def test_checkCatch():
     test_predators = [Predator(0,0,0,1,10,1)]
     test_boids = [Boid(3,3,3,1,1,1,1,1,1,1)]
 
-    boid_catches = findTarget(test_predators, test_boids, r_S, L)
+    boid_catches = findClosestTarget(test_predators, test_boids, r_S, L)
 
     assert boid_catches[0] == None, "Predator should not have a caught boid"
 
@@ -95,7 +94,7 @@ def test_checkCatch():
     test_predators = [Predator(0,0,0,1,10,1)]
     test_boids = [Boid(1,1,1,1,1,1,1,1,1,1)]
 
-    boid_catches = findTarget(test_predators, test_boids, r_S, L)
+    boid_catches = findClosestTarget(test_predators, test_boids, r_S, L)
 
     assert boid_catches[0] == test_boids[0], "Predator should have a caught boid"
 
@@ -103,7 +102,7 @@ def test_checkCatch():
     test_predators = [Predator(0,0,0,1,10,1)]
     test_boids = [Boid(1,1,1,1,1,1,1,1,1,1), Boid(2,1,1,1,1,1,1,1,1,1)]
 
-    boid_catches = findTarget(test_predators, test_boids, r_S, L)
+    boid_catches = findClosestTarget(test_predators, test_boids, r_S, L)
 
     assert boid_catches[0] == test_boids[0], "Predator should have closest boid"
 
@@ -119,7 +118,6 @@ def test_updateVelocity():
     # test boid out of range
     test_boids = [Boid(100,100,100,1,1,1,1,1,1,1)] 
     # check for range, should be False
-
 
     test_predator = Predator(0,0,0,1,10,1)
     test_predator.updateVelocity()
