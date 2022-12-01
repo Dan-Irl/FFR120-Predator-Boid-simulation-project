@@ -2,4 +2,4 @@ pygame
 scipy
 numpy
 matplotlib
-
+pytest
