@@ -1,7 +1,8 @@
+# %%
 from boid import Boid
 from predator import Predator
 from food import Food, food_spawn
-from find_neighbours import findNeighbours
+from find_neighbours import findNeighbours, findClosestTarget
 import numpy as np
 
 #Parameters
@@ -14,7 +15,7 @@ r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 5 # radius of food
 r_FC = 1 # radius of food consumation
-r_PA = 10 # radius of pradtor awareness
+r_PA = 8 # radius of predator awareness
 v_boid = 2 # velocity
 L = 100 # length of the simulation area
 c_cohesion = 1 # cohesion coefficient
@@ -33,8 +34,8 @@ v_predator = 2 # velocity
 number_of_food = 2
 
 
-boids = [Boid(np.random.random(L),np.random.random(L),np.random.random(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt) for _ in range(N_boids)]
-predators = [Predator for _ in range(N_predators)]
+boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt) for _ in range(N_boids)]
+predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
 food = [Food for _ in range(N_predators)]
 
 
@@ -46,17 +47,40 @@ for gen in range(generations):
     boid_small_neighbours = findNeighbours(boids, r_S, L)
     boid_large_neighbours = findNeighbours(boids, r_CA, L)
     
-    
     boid_food_location = findNeighbours(boids, r_F, L)
     boid_food_consumed = findNeighbours(boids, r_FC, L)
     boid_predator_neighbours = findNeighbours(boids, r_PA, L)
-    predator_boid_neighbours = findNeighbours(predators, r_B, L)
-    
-    
-    # 1. Update consumptions using consumption neighbour lists
-    # 2. Update positions of individuals that are left
-    
+    boid_targets = findClosestTarget(predators, boids, r_B, L)    # find closest boid targets for predators
 
+    # 1. Update consumptions using consumption neighbour lists
+
+    predatorSpawnLocations = []
+    deadPredators = []
+    for predator in predators:
+        predator.checkRangeAndChase(boid_targets[predators.index(predator)])
+        predator.updateVelocity()                                               # update velocity of predator
+        predator.updatePosition()                                               # update position of predator
+        
+        if predator.getChasing() == True:
+            if predator.checkCatch() and predator.chasing == True:                   # if predator catches boid
+                predator.setChasing(False)
+                predator.setChasedBoid(None)
+                predator.feed()
+                if predator.checkReproduce():
+                    predatorSpawnPositions.append(predator.getPosition())
+                    predator.setHealth(100)
+                # predator.setResting(True)
+                boids.remove(predator.getChasedBoid())
+            predator.healthDecay()
+            if predator.checkDead():
+                deadPredators.append(predator)
+    
+    for pos in predatorSpawnLocations:
+        predators.append(Predator(pos[0], pos[1], pos[2], v_predator, r_S, L, dt))  # spawn new predators
+    for predator in deadPredators:
+        predators.remove(predator)                                                  # remove dead predators
+
+    # 2. Update positions of individuals that are left
     
     for boid in boids:
         boid.updateSmallFlock(boids, r_CA, r_S, r_F)
@@ -65,10 +89,6 @@ for gen in range(generations):
         boid.updateFoodFlock(food, r_F)
         boid.updateVelocity(c_cohesion, c_separation, c_alignment, c_predators, c_food)
         boid.updatePosition()
-
-    for predator in predators:
-        predator.updateSmallFlock(boids, r_B, r_S)
-        predator.updatePosition()
 
     for food in food:
         #Check if food is eaten and add boid to its location
@@ -82,8 +102,6 @@ for gen in range(generations):
     if len(boids) < 1:
         break
     if len(predators) < 1:
-        break
-    
-    
+        break  
     
 #PLOTTING
