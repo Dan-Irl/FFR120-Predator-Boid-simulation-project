@@ -10,9 +10,9 @@ from food import Food
 def test_findNeighbours():
     r = 2
     L = 10
-    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
-    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1)
-    testBoid3 = Boid(3,9,4,1,1,1,1,1,1,1)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1,L)
+    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1,L)
+    testBoid3 = Boid(3,9,4,1,1,1,1,1,1,1,L)
     
     boids = [testBoid1, testBoid2, testBoid3]
     
@@ -29,13 +29,14 @@ def test_findNeighbours():
 def test_updateSmallFlock():
     r = 5
     L = 10
-    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
-    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1)
-    testBoid3 = Boid(0,0,0,1,1,1,1,1,1,1)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1,L)
+    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1,L)
+    testBoid3 = Boid(0,0,0,1,1,1,1,1,1,1,L)
     
     boids = [testBoid1, testBoid2, testBoid3]
     
     neighbours = findNeighbours(boids, r, L)
+    
     
     testBoid1.updateSmallFlock(boids, neighbours)
     
@@ -46,9 +47,9 @@ def test_updateSmallFlock():
 def test_updateLargeFlock():
     r = 5
     L = 10
-    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
-    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1)
-    testBoid3 = Boid(0,3,2,1,1,1,1,1,1,1)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1,L)
+    testBoid2 = Boid(0,1,0,1,1,1,1,1,1,1,L)
+    testBoid3 = Boid(0,3,2,1,1,1,1,1,1,1,L)
     
     boids = [testBoid1, testBoid2, testBoid3]
     
@@ -64,9 +65,9 @@ def test_updateLargeFlock():
 def test_findFood():
     r = 10
     L = 20
-    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1)
-    testBoid2 = Boid(10,10,10,1,1,1,1,1,1,1)
-    testBoid3 = Boid(0,0,2,1,1,1,1,1,1,1)
+    testBoid1 = Boid(0,0,0,1,1,1,1,1,1,1,L)
+    testBoid2 = Boid(10,10,10,1,1,1,1,1,1,1,L)
+    testBoid3 = Boid(0,0,2,1,1,1,1,1,1,1,L)
     
     food1 = Food(1,1,1)
     food2 = Food(10,10,11)
