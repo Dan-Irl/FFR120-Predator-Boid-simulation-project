@@ -2,7 +2,8 @@
 from boid import Boid
 from predator import Predator
 from food import Food, food_spawn
-from find_neighbours import findNeighbours, findClosestTarget
+from find_neighbours import findNeighbours, findClosestTarget, findTarget
+import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
@@ -34,9 +35,14 @@ v_predator = 2 # velocity
 number_of_food = 2
 
 
-boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt) for _ in range(N_boids)]
+boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
 food = [Food for _ in range(N_predators)]
+
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+render = ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
+plt.show()
 
 
 boid_history = [len(boids)]
@@ -47,8 +53,9 @@ for gen in range(generations):
     boid_small_neighbours = findNeighbours(boids, r_S, L)
     boid_large_neighbours = findNeighbours(boids, r_CA, L)
     
-    boid_food_location = findNeighbours(boids, r_F, L)
-    boid_food_consumed = findNeighbours(boids, r_FC, L)
+    boid_food_location = findTarget(boids, food, r_F,L)
+    boid_food_consumed = findTarget(boids,food, r_FC, L)
+    
     boid_predator_neighbours = findNeighbours(boids, r_PA, L)
     boid_targets = findClosestTarget(predators, boids, r_B, L)    # find closest boid targets for predators
 
@@ -83,12 +90,15 @@ for gen in range(generations):
     # 2. Update positions of individuals that are left
     
     for boid in boids:
-        boid.updateSmallFlock(boids, r_CA, r_S, r_F)
-        boid.updateLargeFlock(boids, r_CA, r_S, r_F)
+        boid.updateSmallFlock(boids, boid_small_neighbours[boids.index(boid)])    # update small flock 
+        boid.updateLargeFlock(boids, boid_large_neighbours[boids.index(boid)])    # update large flock
         boid.updatePredators(predators, r_B, r_S)
         boid.updateFoodFlock(food, r_F)
         boid.updateVelocity(c_cohesion, c_separation, c_alignment, c_predators, c_food)
         boid.updatePosition()
+        
+        boid.foodlist = boid_food_location[boids.index(boid)]
+        
 
     for food in food:
         #Check if food is eaten and add boid to its location
