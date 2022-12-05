@@ -2,7 +2,7 @@
 
 import numpy as np
 class Boid:
-    def __init__(self,x:float,y:float,z:float,v0:float,c_cohesion:float,c_alignment:float,c_separation:float,c_predators:float,c_food:float,dt:float):
+    def __init__(self,x:float,y:float,z:float,v0:float,c_cohesion:float,c_alignment:float,c_separation:float,c_predators:float,c_food:float,dt:float,L:float):
             
         self.x = x
         self.y = y
@@ -17,6 +17,7 @@ class Boid:
         self.c_predators = c_predators
         self.c_food = c_food
         self.dt = dt
+        self.L = L
         self.smallflock = []
         self.largeflock = []
         self.predatorflock = []
@@ -36,6 +37,21 @@ class Boid:
         self.x += self.x + self.vx
         self.y += self.y + self.vy
         self.z += self.z + self.vz
+        
+    def update_position_periodic(self):
+        #wrappiung around cordination system
+        if self.x > self.L:
+            self.x = self.x - self.L
+        if self.x < 0:
+            self.x = self.x + self.L
+        if self.y > self.L:
+            self.y = self.y - self.L
+        if self.y < 0:
+            self.y = self.y + self.L
+        if self.z > self.L:
+            self.z = self.z - self.L
+        if self.z < 0:
+            self.z = self.z + self.L
     
     #function that updates the position of the boid using cohesion, separation,
     #alignment, predators, food
