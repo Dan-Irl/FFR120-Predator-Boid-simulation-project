@@ -30,7 +30,7 @@ class Boid:
     
     #function that returns the position of the boid
     def getPosition(self):
-        return ([self.x,self.y,self.z])
+        return (self.x,self.y,self.z)
        
     #function that updates the position of the boid
     def updatePosition(self):
@@ -93,11 +93,13 @@ class Boid:
             py = 0
             pz = 0
         
-        if len(self.foodlist)>0:
+        if self.foodlist is not None:
             #food
             fx = np.mean([i.x for i in self.foodlist])-self.x
             fy = np.mean([i.y for i in self.foodlist])-self.y
             fz = np.mean([i.z for i in self.foodlist])-self.z
+            
+            fx,fy,fz = tuple(map(lambda i, j: i - j, self.getPosition() , self.foodlist.getPosition()))
         else:
             fx = 0
             fy = 0
