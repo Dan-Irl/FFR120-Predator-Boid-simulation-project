@@ -20,22 +20,27 @@ class Predator:
         self.resting = False
        
     def getPosition(self):
+        """Returns the position of the predator"""
         return (self.x,self.y,self.z)
 
     def getVelocity(self):
+        """Returns velocity of predator"""
         return (self.vx,self.vy,self.vz)
 
     def getHealth(self):
+        """Returns the health of the predator"""
         return self.health
 
     def getChasing(self):
+        """Returns True if predator is chasing, false otherwise."""
         return self.chasing
 
     def getChasedBoid(self):
+        """Returns the chased boid of the predator"""
         return self.chasedBoid
-
-    # function that updates the position of the predator
+    
     def updatePosition(self):
+        """Updates the position of the predator using perodic boundary condictions."""
         self.x += self.vx*self.dt
         self.y += self.vy*self.dt
         self.z += self.vz*self.dt
@@ -60,8 +65,8 @@ class Predator:
             self.z -= self.L
             self.vz = -self.vz
 
-    # function that updates the velocity of the predator
     def updateVelocity(self):
+        """function that updates the velocity of the predator"""
         if self.resting == True:
             self.vx = 0
             self.vy = 0
@@ -97,44 +102,30 @@ class Predator:
     def awaken(self):
         self.resting = False
 
-    # function that checks whether the target is in range of the predator
     def checkRangeAndChase(self, boid_target):
-        # check if the target is in range of the predator
-        if boid_target != None:
+        """Checks if predator is in range of target and if so, starts chasing it"""
+        if boid_target is not None:
             self.chasing = True
             self.chasedBoid = boid_target
-
-    # function that checks whether the predator is chasing a prey
-    def getChasing(self):
-        return self.chasing
     
-    # function that checks whether the predator has caught a prey
     def checkCatch(self):
-        if dist(self.getPosition(), self.chasedBoid.getPosition()) <= self.catchRange:
-            return True
-        else:
-            return False
+        """Checks if predator has caught prey and if so, returns True"""
+        return dist(self.getPosition(), self.chasedBoid.getPosition()) <= self.catchRange
 
-    # function that feeds the predator upon health every time step
-    def feed(self):
+    def feed(self) -> None:
+        """Increases health of predator by 10 upon feeding"""
         self.health += 10
 
-    # check if the predator is ready to reproduce
     def checkReproduce(self):
-        if self.health >= 150:
-            # self.rest()
-            return True
-        else:
-            return False
+        """Checks if predator is ready to reproduce and if so, returns True otherwise False"""
+        return self.health >= 150
 
-    # function that decays the predator's health every time step
     def healthDecay(self):
+        """Decays health of predator every time step"""
         self.health -= 1*self.dt
 
     # function that checks whether the predator is dead
     def checkDead(self):
-        if self.health <= 0:
-            return True
-        else:
-            return False
+        """Checks if predators health is below 0 and if so, returns True otherwise False"""
+        return self.health <= 0
 
