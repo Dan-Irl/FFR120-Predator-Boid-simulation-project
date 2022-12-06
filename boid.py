@@ -57,21 +57,6 @@ class Boid:
         elif self.z > self.L:
             self.z -= self.L
             self.vz = -self.vz
-        
-    def update_position_periodic(self):
-        #wrappiung around cordination system
-        if self.x > self.L:
-            self.x = self.x - self.L
-        if self.x < 0:
-            self.x = self.x + self.L
-        if self.y > self.L:
-            self.y = self.y - self.L
-        if self.y < 0:
-            self.y = self.y + self.L
-        if self.z > self.L:
-            self.z = self.z - self.L
-        if self.z < 0:
-            self.z = self.z + self.L
     
     #function that updates the position of the boid using cohesion, separation,
     #alignment, predators, food
