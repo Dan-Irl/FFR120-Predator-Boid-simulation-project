@@ -32,12 +32,12 @@ r_S = 2 # radius of separation
 v_predator = 2 # velocity
 
 #food parameters
-number_of_food = 2
+number_of_food = 2 
 
 
 boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
-food = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(N_predators)]
+food = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(number_of_food)] 
 
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
@@ -54,7 +54,7 @@ for gen in range(generations):
     boid_large_neighbours = findNeighbours(boids, r_CA, L)  # find neighbours for cohesion and alignment
     
     boid_food_location = findTarget(boids, food, r_F,L)     # find food for boids
-    boid_food_consumed = findTarget(boids,food, r_FC, L)    # check if food for boids is close enough to consume
+    boid_food_to_consume = findTarget(boids,food, r_FC, L)    # check if food for boids is close enough to consume
     
     boid_predator_neighbours = findNeighbours(predators, r_PA, L) # find predators for boids in their radius of awareness
     
@@ -100,11 +100,14 @@ for gen in range(generations):
         
         boid.foodlist = boid_food_location[boids.index(boid)]
         
-
-    for food in food:
-        #Check if food is eaten and add boid to its location
-        food = food_spawn(number_of_food,food,L)
-        food.updatePosition()
+    #Check if food is eaten and add boid to its location
+    for consumed_food in boid_food_to_consume:
+        # Create a copy of a boid after it has eaten food
+        food.remove(consumed_food) 
+        food_spawn(number_of_food,food,L) #spawn new food
+        new_boid_cords = consumed_food.getPosition()
+        
+        #Create new boid...
 
     boid_history.append(len(boids))
     predators_history.append(len(predators))
