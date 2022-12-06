@@ -34,7 +34,7 @@ def test_CheckRangeAndChase():
     L = 100  # length of the box
 
     ## test boid out of range ##
-    test_boids = [Boid(10,10,10,1,1,1,1,1,1,1)] 
+    test_boids = [Boid(10,10,10,1,1,1,1,1,1,1,L)] 
     test_predators = [Predator(0,0,0,1,2,100,1)]
 
     boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
@@ -46,7 +46,7 @@ def test_CheckRangeAndChase():
 
     ## test boids with one in range ##
     test_predators = [Predator(0,0,0,1,2,100,1)]
-    test_boids = [Boid(49,49,49,1,1,1,1,1,1,1), Boid(5,5,5,1,1,1,1,1,1,1)]
+    test_boids = [Boid(49,49,49,1,1,1,1,1,1,1,L), Boid(5,5,5,1,1,1,1,1,1,1,L)]
 
     boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
@@ -57,7 +57,7 @@ def test_CheckRangeAndChase():
 
     ## test boids with two in range ##
     test_predators = [Predator(0,0,0,1,2,100,1)]
-    test_boids = [Boid(49,49,49,1,1,1,1,1,1,1), Boid(5,5,5,1,1,1,1,1,1,1), Boid(2,2,2,1,1,1,1,1,1,1)]
+    test_boids = [Boid(49,49,49,1,1,1,1,1,1,1,L), Boid(5,5,5,1,1,1,1,1,1,1,L), Boid(2,2,2,1,1,1,1,1,1,1,L)]
 
     boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
@@ -68,7 +68,7 @@ def test_CheckRangeAndChase():
 
     ## test with multiple predators ##
     test_predators = [Predator(0,0,0,1,2,100,1), Predator(20,20,20,1,2,100,1)]
-    test_boids = [Boid(49,49,49,1,1,1,1,1,1,1), Boid(5,5,5,1,1,1,1,1,1,1), Boid(15,15,15,1,1,1,1,1,1,1)]
+    test_boids = [Boid(49,49,49,1,1,1,1,1,1,1,L), Boid(5,5,5,1,1,1,1,1,1,1,L), Boid(15,15,15,1,1,1,1,1,1,1,L)]
 
     boid_targets = findClosestTarget(test_predators, test_boids, r_B, L)
 
@@ -84,7 +84,7 @@ def test_checkCatch():
 
     ## test boid out of range to catch ##
     test_predators = [Predator(0,0,0,1,2,100,1)]
-    test_boids = [Boid(3,3,3,1,1,1,1,1,1,1)]
+    test_boids = [Boid(3,3,3,1,1,1,1,1,1,1,L)]
 
     boid_catches = findClosestTarget(test_predators, test_boids, r_S, L)
 
@@ -92,7 +92,7 @@ def test_checkCatch():
 
     ## test boid in range to catch ##
     test_predators = [Predator(0,0,0,1,2,100,1)]
-    test_boids = [Boid(1,1,1,1,1,1,1,1,1,1)]
+    test_boids = [Boid(1,1,1,1,1,1,1,1,1,1,L)]
 
     boid_catches = findClosestTarget(test_predators, test_boids, r_S, L)
 
@@ -100,7 +100,7 @@ def test_checkCatch():
 
     ## test multiple boids in range to catch ##
     test_predators = [Predator(0,0,0,1,2,100,1)]
-    test_boids = [Boid(1,1,1,1,1,1,1,1,1,1), Boid(2,1,1,1,1,1,1,1,1,1)]
+    test_boids = [Boid(1,1,1,1,1,1,1,1,1,1,L), Boid(2,1,1,1,1,1,1,1,1,1,L)]
 
     boid_catches = findClosestTarget(test_predators, test_boids, r_S, L)
 
@@ -115,8 +115,9 @@ def test_updatePosition():
     assert test_predator.z == 1, "z position not updated correctly"
 
 def test_updateVelocity():
+    L = 100  # length of the box
     # test boid out of range
-    test_boids = [Boid(50,50,50,1,1,1,1,1,1,1)] 
+    test_boids = [Boid(50,50,50,1,1,1,1,1,1,1,L)] 
     # check for range, should be False
 
     test_predators = [Predator(0,0,0,1,2,100,1)]
@@ -132,7 +133,7 @@ def test_updateVelocity():
     assert np.abs(test_predators[0].vz) <= 1, "z velocity not updated correctly"
 
     # test boid in range, see that velocity is aligned with boid
-    test_boids = [Boid(1,1,1,1,1,1,1,1,1,1)]
+    test_boids = [Boid(1,1,1,1,1,1,1,1,1,1,L)]
     test_predators = [Predator(0,0,0,1,2,100,1)]
 
     boid_targets = findClosestTarget(test_predators, test_boids, 10, 100)
