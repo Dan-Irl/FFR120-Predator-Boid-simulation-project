@@ -8,7 +8,7 @@ class Food():
         self.y = y
         self.z = z
         
-    def getPosition(self,):
+    def getPosition(self):
         return (self.x, self.y, self.z)
         
     
