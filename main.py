@@ -54,7 +54,7 @@ for gen in range(generations):
     boid_large_neighbours = findNeighbours(boids, r_CA, L)  # find neighbours for cohesion and alignment
     
     boid_food_location = findTarget(boids, food, r_F,L)     # find food for boids
-    boid_food_to_consume = findTarget(boids,food, r_FC, L)    # check if food for boids is close enough to consume
+    boid_food_to_consume = findTarget(boids,food, r_FC, L)    # check if food for boids is close enough to consume # HAVE TO CHANGE THIS
     
     boid_predator_neighbours = findNeighbours(predators, r_PA, L) # find predators for boids in their radius of awareness
     
@@ -104,10 +104,11 @@ for gen in range(generations):
     for consumed_food in boid_food_to_consume:
         # Create a copy of a boid after it has eaten food
         food.remove(consumed_food) 
-        food_spawn(number_of_food,food,L) #spawn new food
+        food_spawn(number_of_food,food,L) #spawn new food 
         new_boid_cords = consumed_food.getPosition()
         
-        #Create new boid...
+        
+        boids.append(Boid(new_boid_cords[0],new_boid_cords[1],new_boid_cords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
 
     boid_history.append(len(boids))
     predators_history.append(len(predators))
