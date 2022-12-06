@@ -34,9 +34,29 @@ class Boid:
        
     #function that updates the position of the boid
     def updatePosition(self):
-        self.x += self.x + self.vx
-        self.y += self.y + self.vy
-        self.z += self.z + self.vz
+        self.x += self.vx*self.dt
+        self.y += self.vy*self.dt
+        self.z += self.vz*self.dt
+
+        # check (periodic) boundary conditions
+        if self.x < 0:
+            self.x += self.L
+            self.vx = -self.vx
+        elif self.x > self.L:
+            self.x -= self.L
+            self.vx = -self.vx
+        if self.y < 0:
+            self.y += self.L
+            self.vy = -self.vy
+        elif self.y > self.L:
+            self.y -= self.L
+            self.vy = -self.vy
+        if self.z < 0:
+            self.z += self.L
+            self.vz = -self.vz
+        elif self.z > self.L:
+            self.z -= self.L
+            self.vz = -self.vz
         
     def update_position_periodic(self):
         #wrappiung around cordination system
