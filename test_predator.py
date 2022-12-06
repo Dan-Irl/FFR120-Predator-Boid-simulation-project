@@ -141,7 +141,7 @@ def test_updateVelocity():
 
     test_predators[0].updateVelocity()
 
-    assert test_predators[0].chasing == True, "Predator should be chasing"
+    assert test_predators[0].chasing is True, "Predator should be chasing"
     print(test_predators[0].getVelocity())
     print(np.linalg.norm(test_predators[0].getVelocity()))
     # check that velocity is aligned with boid
