@@ -37,7 +37,7 @@ number_of_food = 2
 
 boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
-food = [Food for _ in range(N_predators)]
+food = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(N_predators)]
 
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
@@ -50,13 +50,14 @@ predators_history = [len(predators)]
 food_history = []
 
 for gen in range(generations):
-    boid_small_neighbours = findNeighbours(boids, r_S, L)
-    boid_large_neighbours = findNeighbours(boids, r_CA, L)
+    boid_small_neighbours = findNeighbours(boids, r_S, L)   # find neighbours for separation
+    boid_large_neighbours = findNeighbours(boids, r_CA, L)  # find neighbours for cohesion and alignment
     
-    boid_food_location = findTarget(boids, food, r_F,L)
-    boid_food_consumed = findTarget(boids,food, r_FC, L)
+    boid_food_location = findTarget(boids, food, r_F,L)     # find food for boids
+    boid_food_consumed = findTarget(boids,food, r_FC, L)    # check if food for boids is close enough to consume
     
-    boid_predator_neighbours = findNeighbours(boids, r_PA, L)
+    boid_predator_neighbours = findNeighbours(predators, r_PA, L) # find predators for boids in their radius of awareness
+    
     boid_targets = findClosestTarget(predators, boids, r_B, L)    # find closest boid targets for predators
 
     # 1. Update consumptions using consumption neighbour lists
