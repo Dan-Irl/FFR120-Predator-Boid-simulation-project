@@ -12,6 +12,7 @@ dt = 0.1
 
 # Boid parameters (Tuna)
 N_boids = 20 # number of boids 
+N_max_boids = 100 # maximum number of boids
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 5 # radius of food
@@ -39,10 +40,9 @@ boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_b
 predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
 food = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(number_of_food)] 
 
-fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-render = ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
-plt.show()
+#fig = plt.figure()
+#ax = fig.add_subplot(projection='3d')
+#render = ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
 
 
 boid_history = [len(boids)]
@@ -71,11 +71,12 @@ for gen in range(generations):
             continue
         
         food.remove(consumed_food)
-        #food = food_spawn(number_of_food,food,L) #spawn new food 
+        food = food_spawn(1,food,L) #spawn new food 
         new_boid_cords = consumed_food.getPosition()
         
-        # Create a copy of a boid after it has eaten food
-        boids.append(Boid(new_boid_cords[0],new_boid_cords[1],new_boid_cords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
+        # Create a new boid after it has eaten food at the food position
+        if len(boids) < N_max_boids:
+            boids.append(Boid(new_boid_cords[0],new_boid_cords[1],new_boid_cords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
 
 
     predatorSpawnLocations = []
