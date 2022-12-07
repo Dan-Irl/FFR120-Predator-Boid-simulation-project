@@ -32,6 +32,9 @@ class Boid:
     #function that returns the position of the boid
     def getPosition(self):
         return (self.x,self.y,self.z)
+
+    def getVelocity(self):
+        return (self.vx,self.vy,self.vz)
        
     #function that updates the position of the boid
     def updatePosition(self):
@@ -106,7 +109,10 @@ class Boid:
             # fy = np.mean([i.y for i in self.foodlist])-self.y
             # fz = np.mean([i.z for i in self.foodlist])-self.z
             
-            fx,fy,fz = tuple(map(lambda i, j: i - j, self.getPosition() , self.closestFood.getPosition()))
+            # fx,fy,fz = tuple(map(lambda i, j: i - j, self.getPosition() , self.closestFood.getPosition()))
+            fx = self.closestFood.x - self.x
+            fy = self.closestFood.y - self.y
+            fz = self.closestFood.z - self.z
         else:
             fx = 0
             fy = 0

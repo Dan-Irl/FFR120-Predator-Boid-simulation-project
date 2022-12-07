@@ -7,38 +7,38 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 1000
+generations = 500000
 dt = 1
 timeCounter = 0
 
 # Boid parameters (Tuna)
-N_boids = 20 # number of boids 
-N_max_boids = 100 # maximum number of boids
+N_boids = 30 # number of boids 
+N_max_boids = 200 # maximum number of boids
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
-r_F = 5 # radius of food
-r_FC = 10 # radius of food consumation REDUCE THIS
+r_F = 15 # radius of food sensing
+r_FC = 3 # radius of food consumation REDUCE THIS
 r_PA = 8 # radius of predator awareness
-v_boid = 2 # velocity
+v_boid = 3 # velocity
 L = 100 # length of the simulation area
 c_cohesion = 1 # cohesion coefficient
 c_alignment = 1 # alignment coefficient
 c_separation = 2 # separation coefficient
-c_food = 1 # food search coefficient
+c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
 # predator parameters (Tiger shark)
-N_predators = 5 # number of predators
+N_predators = 10 # number of predators
 r_B = 10 # radius of boid sensing
 r_S = 2 # radius of separation
-v_predator = 2 # velocity
-reproduction_cutoff = 150 # health points required to reproduce
-healthGain = 50
+v_predator = 5 # velocity
+reproduction_cutoff = 150  # health points required to reproduce
+healthGain = 10            # health points gained from eating a boid
 
 #food parameters
-nFood = 10           # number of food at start
+nFood = 5           # number of food at start
 # foodSpawnRate = 1   # number of food that spawn per generation
-foodSpawnRate = 0.1  # spawns one food every 1/foodSpawnRate generations  
+foodSpawnRate = 0.01  # spawns one food every 1/foodSpawnRate generations  
 
 boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
@@ -50,14 +50,12 @@ ax.set_xlim3d(0, L)
 ax.set_ylim3d(0, L)
 ax.set_zlim3d(0, L)
 
-
-
 boid_history = [len(boids)]
 predators_history = [len(predators)]
 food_history = []
 
 all_boids_dead = False
-for gen in np.arange(0, generations+10, 10):
+for gen in np.arange(0, generations+100, 100):
     print("Generation: ", gen)
     print("Number of boids: ", len(boids))
     print("Number of predators: ", len(predators))
@@ -69,27 +67,13 @@ for gen in np.arange(0, generations+10, 10):
 
     predatorSpawnLocations = []
     deadPredators = []
-    
-    # proposal for predator logic
-    # 1. check if predator is dead and simply remove it from the list instead of appending to remove list
-        # Answer: From my experience in the past, it is better to remove the dead predators from the list after the loop is done. 
-        # This is because if you remove them while looping, the loop will skip the next predator in the list. 
-        # This is because the list is shortened by one element. 
-        # (LMAO this comment is from Github Copilot but says what I wanted to say) 
-    # 2. Check if predator is chasing and has caught a boid
-        # Answer: My thinking is a predator moves at the start of a gen, and sees if it can catch a boid before the boid moves.
-    # 3. Update predator behaviour
-    # 4. Append predator directly to predator list instead of to predator spawn location list
-        # See Answer to 1.
-    # 5. Thats all i think? it would simplyfy the code a lot imo
-    
     for predator in predators:
         predator.checkRangeAndChase(boid_targets[predators.index(predator)])
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
         
         if predator.chasing == True:                                            # if predator is chasing a boid
-            if predator.checkIfCaught():                                           # if predator catches boid
+            if predator.checkIfCaught():                                        # if predator catches boid
                 print("Predator caught boid")
                 predator.feed(healthGain)
                 boids.remove(predator.getChasedBoid()) if predator.getChasedBoid() in boids else None
@@ -161,15 +145,15 @@ for gen in np.arange(0, generations+10, 10):
     # 6. New food spawns
     # for i in range(foodSpawnRate):
     #     foods.append(Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)))
-    if gen % (1/foodSpawnRate) == 0:                                                                # spawn new food every 1/foodSpawnRate generations
+    if gen*dt % (1/foodSpawnRate) == 0:                                                                # spawn new food every 1/foodSpawnRate generations
         foods.append(Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)))
 
     # Update history
     boid_history.append(len(boids))
     predators_history.append(len(predators))
     # food history
-    # COunter update to allow plotting with or without break
-    timeCounter=timeCounter+1
+    # Counter update to allow plotting with or without break
+    timeCounter += 1
     if len(boids) < 1:
         print("All boids are dead")
         break
@@ -184,13 +168,13 @@ for gen in np.arange(0, generations+10, 10):
     #ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green')
     
     # Pause for a fixed interval
-    plt.pause(0.1)
+    # plt.pause(0.1)
 
 plt.show()
 
 #PLOTTING for graphs (PopDyn over simulation)
 doPlot = False
-#doPlot = True
+doPlot = True
 if doPlot:
     Timesteps = list(range(timeCounter+1))
     # len for Debugging
@@ -202,7 +186,7 @@ if doPlot:
     plt.plot(Timesteps, predators_history, color='coral', label='Predators' )
     #plt.plot(Timesteps, FoodAmountList, color='palegreen', label='Food' ) # No Foodhistory yet
     plt.xlabel('$Timestep$')
-    plt.ylabel("Amount")
+    plt.ylabel("Numbers")
     plt.title("Populations of boids, predators and food over time")
     plt.legend()
     plt.show()
