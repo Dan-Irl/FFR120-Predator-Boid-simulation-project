@@ -9,6 +9,7 @@ import numpy as np
 #Parameters
 generations = 1000
 dt = 1
+timeCounter = 0
 
 # Boid parameters (Tuna)
 N_boids = 20 # number of boids 
@@ -167,7 +168,8 @@ for gen in np.arange(0, generations+10, 10):
     boid_history.append(len(boids))
     predators_history.append(len(predators))
     # food history
-
+    # COunter update to allow plotting with or without break
+    timeCounter=timeCounter+1
     if len(boids) < 1:
         print("All boids are dead")
         break
@@ -185,3 +187,22 @@ for gen in np.arange(0, generations+10, 10):
     plt.pause(0.1)
 
 plt.show()
+
+#PLOTTING for graphs (PopDyn over simulation)
+doPlot = False
+#doPlot = True
+if doPlot:
+    Timesteps = list(range(timeCounter+1))
+    # len for Debugging
+    #print(len(Timesteps))
+    #print(len(boid_history))
+    #print(len(predators_history))
+    plt.figure()
+    plt.plot(Timesteps, boid_history, color='darkturquoise', label='Boids' )
+    plt.plot(Timesteps, predators_history, color='coral', label='Predators' )
+    #plt.plot(Timesteps, FoodAmountList, color='palegreen', label='Food' ) # No Foodhistory yet
+    plt.xlabel('$Timestep$')
+    plt.ylabel("Amount")
+    plt.title("Populations of boids, predators and food over time")
+    plt.legend()
+    plt.show()
