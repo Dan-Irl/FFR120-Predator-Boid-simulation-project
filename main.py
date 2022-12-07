@@ -11,19 +11,20 @@ generations = 1000
 dt = 1
 
 # Boid parameters (Tuna)
-N_boids = 50        # number of boids 
-r_CA = 8            # radius of cohesion and alignment
-r_S = 5             # radius of separation
-r_F = 10            # radius of food
-r_FC = 2            # radius of food consumption
-r_PA = 8            # radius of predator awareness
-v_boid = 1          # velocity of boid
-L = 100             # length of the simulation area
-c_cohesion = 1      # cohesion coefficient
-c_alignment = 1     # alignment coefficient
-c_separation = 2    # separation coefficient
-c_food = 50         # food search coefficient
-c_predators = 1     # predator avoidance coefficient
+N_boids = 20 # number of boids 
+N_max_boids = 100 # maximum number of boids
+r_CA = 8 # radius of cohesion and alignment
+r_S = 5 # radius of separation
+r_F = 5 # radius of food
+r_FC = 10 # radius of food consumation REDUCE THIS
+r_PA = 8 # radius of predator awareness
+v_boid = 2 # velocity
+L = 100 # length of the simulation area
+c_cohesion = 1 # cohesion coefficient
+c_alignment = 1 # alignment coefficient
+c_separation = 2 # separation coefficient
+c_food = 1 # food search coefficient
+c_predators = 1 # predator avoidance coefficient
 
 # predator parameters (Tiger shark)
 N_predators = 5 # number of predators
@@ -45,6 +46,7 @@ ax = fig.add_subplot(projection='3d')
 render = ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
 plt.show()
 
+
 boid_history = [len(boids)]
 predators_history = [len(predators)]
 food_history = []
@@ -62,6 +64,14 @@ for gen in np.arange(0, generations+10, 10):
 
     predatorSpawnLocations = []
     deadPredators = []
+    
+    # proposal for predator logic
+    # 1. check if predator is dead and simply remove it from the list instead of appending to remove list
+    # 2. Check if predator is chasing and has caught a boid
+    # 3. Update predator behaviour
+    # 4. Append predator directly to predator list instead of to predator spawn location list
+    # 5. Thats all i think? it would simplyfy the code a lot imo
+    
     for predator in predators:
         predator.checkRangeAndChase(boid_targets[predators.index(predator)])
         predator.updateVelocity()                                               # update velocity of predator

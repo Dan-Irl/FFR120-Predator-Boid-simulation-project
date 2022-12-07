@@ -19,11 +19,11 @@ class Predator:
         self.chasedBoid = None
         self.resting = False
        
-    def getPosition(self):
+    def getPosition(self) -> tuple:
         """Returns the position of the predator"""
         return (self.x,self.y,self.z)
 
-    def getVelocity(self):
+    def getVelocity(self) -> tuple:
         """Returns velocity of predator"""
         return (self.vx,self.vy,self.vz)
 
@@ -86,15 +86,16 @@ class Predator:
             self.vy = self.vy*self.v0/v_norm
             self.vz = self.vz*self.v0/v_norm
 
-    # immobilize predator for a certain amount of time
     def rest(self):
+        """Sets the predator state to resting"""
         self.resting = True
 
-    # function that checks whether the predator is resting
     def checkResting(self):
+        """Returns True if perdator is resting otherwise False"""
         return self.resting
     
     def awaken(self):
+        """Sets the predator state to not resting"""
         self.resting = False
 
     def checkRangeAndChase(self, boid_target):
@@ -111,7 +112,7 @@ class Predator:
         """Increases health of predator by 10 upon feeding"""
         self.health += 50
 
-    def checkReproduce(self):
+    def checkReproduce(self) -> bool:
         """Checks if predator is ready to reproduce and if so, returns True otherwise False"""
         return self.health >= 150
 
@@ -120,7 +121,7 @@ class Predator:
         self.health -= 1*self.dt
 
     # function that checks whether the predator is dead
-    def checkDead(self):
+    def checkDead(self)->bool:
         """Checks if predators health is below 0 and if so, returns True otherwise False"""
         return self.health <= 0
 
