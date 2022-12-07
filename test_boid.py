@@ -1,5 +1,5 @@
 from boid import Boid
-from find_neighbours import findNeighbours, findTarget
+from find_neighbours import findNeighbours, findTarget, findClosestTarget
 from food import Food
 
 # Unit test for boid.py
@@ -76,7 +76,7 @@ def test_findFood():
 
     foods = [food1,food2]
 
-    closestFood = findTarget(boids,foods,r,L)
+    closestFood = findClosestTarget(boids,foods,r,L)
     
     #Sets the closest food for each boid if it is within range
     for boid in boids:

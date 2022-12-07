@@ -1,4 +1,4 @@
-#class that defines the boid and their behaviour
+# class that defines the boid and their behaviour
 
 import numpy as np
 class Boid:
@@ -20,8 +20,9 @@ class Boid:
         self.L = L
         self.smallflock = []
         self.largeflock = []
-        self.predatorflock = []
-        self.foodlist = []
+        self.predatorFlock = []
+        # self.foodList = []
+        self.closestFood = None
 
     # enables checking equality of boids, among other things
     def __eq__(self, other):
@@ -88,23 +89,24 @@ class Boid:
             sy = 0
             sz = 0
         
-        if len(self.predatorflock)>0:
+        if len(self.predatorFlock)>0:
             #predator
-            px = sum([self.x-i.x for i in self.predatorflock])
-            py = sum([self.y-i.y for i in self.predatorflock])
-            pz = sum([self.z-i.z for i in self.predatorflock])
+            px = sum([self.x-i.x for i in self.predatorFlock])
+            py = sum([self.y-i.y for i in self.predatorFlock])
+            pz = sum([self.z-i.z for i in self.predatorFlock])
         else:
             px = 0
             py = 0
             pz = 0
         
-        if self.foodlist is not None:
+        # if self.foodList is not None:
+        if self.closestFood is not None:
             #food
-            fx = np.mean([i.x for i in self.foodlist])-self.x
-            fy = np.mean([i.y for i in self.foodlist])-self.y
-            fz = np.mean([i.z for i in self.foodlist])-self.z
+            # fx = np.mean([i.x for i in self.foodlist])-self.x
+            # fy = np.mean([i.y for i in self.foodlist])-self.y
+            # fz = np.mean([i.z for i in self.foodlist])-self.z
             
-            fx,fy,fz = tuple(map(lambda i, j: i - j, self.getPosition() , self.foodlist.getPosition()))
+            fx,fy,fz = tuple(map(lambda i, j: i - j, self.getPosition() , self.closestFood.getPosition()))
         else:
             fx = 0
             fy = 0
@@ -125,11 +127,11 @@ class Boid:
     def updateLargeFlock(self,boids:list,neighbours:list):
         self.largeflock = [boids[neighbour] for neighbour in neighbours[boids.index(self)]]
         
-    def updatePredators(self,predators:list,neighbours:list):
-        self.predatorflock = [predators[neighbour] for neighbour in neighbours[predators.index(self)]]
+    def updatePredators(self,predatorsInRange):
+        self.predatorFlock = predatorsInRange
         
-    def updateFoodFlock(self,food:list,neighbours:list):
-        self.foodlist = [food[neighbour] for neighbour in neighbours[food.index(self)]]
-        
-        
-        
+    # def updateFoodList(self, foodsInRange):         # Alternative 1: All foods in range
+    #     if len(foodsInRange) > 0:      # all foods in range
+    #         self.foodList = foodsInRange
+    #     else:                                               
+    #         self.foodList = []

@@ -22,11 +22,7 @@ def test_feed():
     test_predator = Predator(0,0,0,1,2,100,1)
     test_predator.feed()
 
-    assert test_predator.health == 110, "Health not updated correctly"
-
-def test_getChasing():
-    test_predator = Predator(0,0,0,1,2,100,1)
-    assert test_predator.getChasing() == False, "Chasing not initialized correctly"
+    assert test_predator.health == 150, "Health not updated correctly"
 
 def test_CheckRangeAndChase():
 

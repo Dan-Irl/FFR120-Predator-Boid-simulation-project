@@ -28,8 +28,22 @@ def findTarget(Individuals:list,Targets:list,radius:int,boundingBox:int) -> list
         if index != []:
             targetList.append(Targets[index[0]])
         else:
-            targetList.append(None)
+            targetList.append([])
      
+    return targetList
+
+def findAllTargets(Individuals:list,Targets:list,radius:int,boundingBox:int) -> list:
+    """Finds all targets for each individual given a list of targets and a radius."""
+    positions = np.array([individual.getPosition() for individual in Individuals])
+    targets = np.array([target.getPosition() for target in Targets])
+    tree = KDTree(targets,boxsize=boundingBox)
+
+    targetList = []
+    for index in tree.query_ball_point(positions, radius):
+        if len(index) > 0:
+            targetList.append([Targets[i] for i in index])
+        else:
+            targetList.append([])
     return targetList
 
 # Function that finds the closest target of each individual
@@ -37,7 +51,7 @@ def findClosestTarget(Individuals:list,Targets:list,radius:int,boundingBox:int) 
     """Finds the closest target for each individual given a list of targets and a radius."""
     positions = np.array([individual.getPosition() for individual in Individuals])
     targets = np.array([target.getPosition() for target in Targets])
-    tree = KDTree(targets,boxsize=boundingBox)
+    tree = KDTree(targets, boxsize=boundingBox)
     
     distances, indices = tree.query(positions, k=1, distance_upper_bound=radius)
 

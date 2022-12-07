@@ -31,10 +31,6 @@ class Predator:
         """Returns the health of the predator"""
         return self.health
 
-    def getChasing(self):
-        """Returns True if predator is chasing, false otherwise."""
-        return self.chasing
-
     def getChasedBoid(self):
         """Returns the chased boid of the predator"""
         return self.chasedBoid
@@ -86,7 +82,6 @@ class Predator:
 
             # normalize the velocity
             v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
-            print(v_norm)
             self.vx = self.vx*self.v0/v_norm
             self.vy = self.vy*self.v0/v_norm
             self.vz = self.vz*self.v0/v_norm
@@ -114,7 +109,7 @@ class Predator:
 
     def feed(self) -> None:
         """Increases health of predator by 10 upon feeding"""
-        self.health += 10
+        self.health += 50
 
     def checkReproduce(self):
         """Checks if predator is ready to reproduce and if so, returns True otherwise False"""
