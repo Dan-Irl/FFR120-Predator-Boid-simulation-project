@@ -14,8 +14,8 @@ class Food():
     
    
 # Function for food spawning
-def food_spawn(self, number_of_food, food_list,L):
-    for i in range(number_of_food):
+def food_spawn(number_of_food, food_list,L):
+    for _ in range(number_of_food):
         x = np.random.random() * L
         y = np.random.random() * L
         z = np.random.random() * L
