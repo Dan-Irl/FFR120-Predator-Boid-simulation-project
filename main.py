@@ -11,11 +11,11 @@ generations = 10
 dt = 0.1
 
 # Boid parameters (Tuna)
-N_boids = 50 # number of boids 
+N_boids = 20 # number of boids 
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 5 # radius of food
-r_FC = 1 # radius of food consumation
+r_FC = 10 # radius of food consumation REDUCE THIS
 r_PA = 8 # radius of predator awareness
 v_boid = 2 # velocity
 L = 100 # length of the simulation area
@@ -32,7 +32,7 @@ r_S = 2 # radius of separation
 v_predator = 2 # velocity
 
 #food parameters
-number_of_food = 2 
+number_of_food = 5 
 
 
 boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
@@ -61,6 +61,22 @@ for gen in range(generations):
     boid_targets = findClosestTarget(predators, boids, r_B, L)    # find closest boid targets for predators
 
     # 1. Update consumptions using consumption neighbour lists
+    
+    #Goes trough the food to be consumed list and removes the food from the food list and creates a new boid at the food position
+    for consumed_food in boid_food_to_consume:
+        if consumed_food is None:
+            continue
+
+        if consumed_food not in food:
+            continue
+        
+        food.remove(consumed_food)
+        #food = food_spawn(number_of_food,food,L) #spawn new food 
+        new_boid_cords = consumed_food.getPosition()
+        
+        # Create a copy of a boid after it has eaten food
+        boids.append(Boid(new_boid_cords[0],new_boid_cords[1],new_boid_cords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
+
 
     predatorSpawnLocations = []
     deadPredators = []
@@ -100,16 +116,6 @@ for gen in range(generations):
         
         boid.foodlist = boid_food_location[boids.index(boid)]
         
-    #Check if food is eaten and add boid to its location
-    for consumed_food in boid_food_to_consume:
-        # Create a copy of a boid after it has eaten food
-        food.remove(consumed_food) 
-        food_spawn(number_of_food,food,L) #spawn new food 
-        new_boid_cords = consumed_food.getPosition()
-        
-        
-        boids.append(Boid(new_boid_cords[0],new_boid_cords[1],new_boid_cords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
-
     boid_history.append(len(boids))
     predators_history.append(len(predators))
     #food history
