@@ -177,8 +177,9 @@ for gen in np.arange(0, generations+10, 10):
     
     #PLotting
     ax.cla()  # Clear the previous frame
-    ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
-    #ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators])
+    ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids],color='blue')
+    #ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red')
+    #ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green')
     
     # Pause for a fixed interval
     plt.pause(0.1)
