@@ -8,19 +8,15 @@ from find_neighbours import findClosestTarget
 # Check here how to write tests (install pytest first):
 # https://docs.pytest.org/en/latest/
 
-def test_getHealth():
-    test_predator = Predator(0,0,0,1,2,100,1)
-    assert test_predator.getHealth() == 100, "Health not initialized correctly"
-
 
 def test_getPosition():
     test_predator = Predator(10,10,99.9,1,2,100,1)
     assert test_predator.getPosition() == (10,10,99.9), "Position not initialized correctly"
 
-
 def test_feed():
+    healthGain = 50
     test_predator = Predator(0,0,0,1,2,100,1)
-    test_predator.feed()
+    test_predator.feed(healthGain)
 
     assert test_predator.health == 150, "Health not updated correctly"
 
@@ -74,7 +70,7 @@ def test_CheckRangeAndChase():
     assert test_predators[0].chasedBoid == test_boids[1], "Predator should have a chased boid"
     assert test_predators[1].chasedBoid == test_boids[2], "Predator should have a chased boid"   
 
-def test_checkCatch():
+def test_checkIfCaught():
     r_S = 2  # range of boid catching
     L = 100  # length of the box
 

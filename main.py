@@ -31,6 +31,8 @@ N_predators = 5 # number of predators
 r_B = 10 # radius of boid sensing
 r_S = 2 # radius of separation
 v_predator = 2 # velocity
+reproduction_cutoff = 150 # health points required to reproduce
+healthGain = 50
 
 #food parameters
 nFood = 10           # number of food at start
@@ -84,22 +86,22 @@ for gen in np.arange(0, generations+10, 10):
         predator.updatePosition()                                               # update position of predator
         
         if predator.chasing == True:                                            # if predator is chasing a boid
-            if predator.checkCatch():                                           # if predator catches boid
+            if predator.checkIfCaught():                                           # if predator catches boid
                 print("Predator caught boid")
-                predator.feed()
+                predator.feed(healthGain)
                 boids.remove(predator.getChasedBoid()) if predator.getChasedBoid() in boids else None
                 if len(boids) < 1:
                     all_boids_dead = True
                     break
 
-                if predator.checkReproduce():                                   # if predator is ready to reproduce 
+                if predator.checkReproduce(reproduction_cutoff):                                   # if predator is ready to reproduce 
                     predatorSpawnLocations.append(predator.getPosition())
                     predator.health = 100
                 # predator.setResting(True)
                 predator.chasing = False
                 predator.chasedBoid = None
             predator.healthDecay()
-            if predator.checkDead():
+            if predator.health < 1:
                 deadPredators.append(predator)
 
     if all_boids_dead:

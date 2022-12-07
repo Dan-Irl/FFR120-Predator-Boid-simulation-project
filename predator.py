@@ -27,10 +27,6 @@ class Predator:
         """Returns velocity of predator"""
         return (self.vx,self.vy,self.vz)
 
-    def getHealth(self):
-        """Returns the health of the predator"""
-        return self.health
-
     def getChasedBoid(self):
         """Returns the chased boid of the predator"""
         return self.chasedBoid
@@ -104,24 +100,19 @@ class Predator:
             self.chasing = True
             self.chasedBoid = boid_target
     
-    def checkCatch(self):
+    def checkIfCaught(self):
         """Checks if predator has caught prey and if so, returns True"""
         return dist(self.getPosition(), self.chasedBoid.getPosition()) <= self.catchRange
 
-    def feed(self) -> None:
-        """Increases health of predator by 10 upon feeding"""
-        self.health += 50
+    def feed(self, healthGain) -> None:
+        """Increases health of predator upon feeding"""
+        self.health += healthGain
 
-    def checkReproduce(self) -> bool:
+    def checkReproduce(self, reproduction_cutoff) -> bool:
         """Checks if predator is ready to reproduce and if so, returns True otherwise False"""
-        return self.health >= 150
+        return self.health >= reproduction_cutoff
 
     def healthDecay(self):
         """Decays health of predator every time step"""
         self.health -= 1*self.dt
-
-    # function that checks whether the predator is dead
-    def checkDead(self)->bool:
-        """Checks if predators health is below 0 and if so, returns True otherwise False"""
-        return self.health <= 0
 
