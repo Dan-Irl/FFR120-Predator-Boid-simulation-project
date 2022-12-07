@@ -67,9 +67,15 @@ for gen in np.arange(0, generations+10, 10):
     
     # proposal for predator logic
     # 1. check if predator is dead and simply remove it from the list instead of appending to remove list
+        # Answer: From my experience in the past, it is better to remove the dead predators from the list after the loop is done. 
+        # This is because if you remove them while looping, the loop will skip the next predator in the list. 
+        # This is because the list is shortened by one element. 
+        # (LMAO this comment is from Github Copilot but says what I wanted to say) 
     # 2. Check if predator is chasing and has caught a boid
+        # Answer: My thinking is a predator moves at the start of a gen, and sees if it can catch a boid before the boid moves.
     # 3. Update predator behaviour
     # 4. Append predator directly to predator list instead of to predator spawn location list
+        # See Answer to 1.
     # 5. Thats all i think? it would simplyfy the code a lot imo
     
     for predator in predators:
@@ -143,8 +149,9 @@ for gen in np.arange(0, generations+10, 10):
         print("Boid ate food")
         # Create a copy of a boid after it has eaten food
         new_boid_coords = consumed_food.getPosition()
-        foods.remove(consumed_food) if consumed_food in foods else None                    
-        boids.append(Boid(new_boid_coords[0],new_boid_coords[1],new_boid_coords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
+        foods.remove(consumed_food) if consumed_food in foods else None 
+        if len(boids) < N_max_boids:                   
+            boids.append(Boid(new_boid_coords[0],new_boid_coords[1],new_boid_coords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
         
     # 6. New food spawns
     # for i in range(foodSpawnRate):
