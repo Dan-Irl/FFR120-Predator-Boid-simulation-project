@@ -44,9 +44,11 @@ predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.unifor
 foods = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(nFood)] 
 
 fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-render = ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
-plt.show()
+ax = fig.add_subplot(111, projection='3d')
+ax.set_xlim3d(0, L)
+ax.set_ylim3d(0, L)
+ax.set_zlim3d(0, L)
+
 
 
 boid_history = [len(boids)]
@@ -173,4 +175,12 @@ for gen in np.arange(0, generations+10, 10):
         print("All predators are dead")
         break  
     
-#PLOTTING 
+    #PLotting
+    ax.cla()  # Clear the previous frame
+    ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids])
+    #ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators])
+    
+    # Pause for a fixed interval
+    plt.pause(0.1)
+
+plt.show()
