@@ -81,24 +81,32 @@ for gen in range(generations):
 
     predatorSpawnLocations = []
     deadPredators = []
+    
+    # proposal for predator logic
+    # 1. check if predator is dead and simply remove it from the list instead of appending to remove list
+    # 2. Check if predator is chasing and has caught a boid
+    # 3. Update predator behaviour
+    # 4. Append predator directly to predator list instead of to predator spawn location list
+    # 5. Thats all i think? it would simplyfy the code a lot imo
+    
     for predator in predators:
         predator.checkRangeAndChase(boid_targets[predators.index(predator)])
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
         
-        if predator.getChasing() == True:
-            if predator.checkCatch() and predator.chasing == True:                   # if predator catches boid
-                predator.setChasing(False)
-                predator.setChasedBoid(None)
-                predator.feed()
-                if predator.checkReproduce():
-                    predatorSpawnPositions.append(predator.getPosition())
-                    predator.setHealth(100)
-                # predator.setResting(True)
-                boids.remove(predator.getChasedBoid())
-            predator.healthDecay()
-            if predator.checkDead():
-                deadPredators.append(predator)
+        if predator.getChasing() is True and predator.checkCatch() is True:                  # if predator catches boid
+            predator.chasing = False
+            predator.chasedBoid = None
+            predator.feed()
+            if predator.checkReproduce():
+                predatorSpawnLocations.append(predator.getPosition())
+                predator.health(100)
+            # predator.setResting(True)
+            boids.remove(predator.getChasedBoid())
+            
+        predator.healthDecay()
+        if predator.checkDead():
+            deadPredators.append(predator)
     
     for pos in predatorSpawnLocations:
         predators.append(Predator(pos[0], pos[1], pos[2], v_predator, r_S, L, dt))  # spawn new predators
