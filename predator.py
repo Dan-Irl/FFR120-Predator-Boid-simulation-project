@@ -66,9 +66,10 @@ class Predator:
         else:
             # if the predator is not chasing a prey, it will move randomly
             if self.chasing == False:
-                self.vx = np.random.uniform(-1,1)
-                self.vy = np.random.uniform(-1,1)
-                self.vz = np.random.uniform(-1,1)
+                
+                self.vx = np.random.normal(self.vx,abs(self.vx*0.5))
+                self.vy = np.random.normal(self.vy,abs(self.vy*0.5))
+                self.vz = np.random.normal(self.vy,abs(self.vy*0.5))
 
             else:  # if the predator is chasing a prey, it will move towards the prey
                 # align velocity vector with prey position -> move towards prey
