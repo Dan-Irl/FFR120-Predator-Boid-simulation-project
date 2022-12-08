@@ -12,7 +12,7 @@ dt = 1
 timeCounter = 0
 
 # Boid parameters (Tuna)
-N_boids = 30 # number of boids 
+N_boids = 10 # number of boids 
 N_max_boids = 200 # maximum number of boids
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
@@ -21,7 +21,7 @@ r_FC = 3 # radius of food consumation REDUCE THIS
 r_PA = 8 # radius of predator awareness
 v_boid = 3 # velocity
 L = 100 # length of the simulation area
-c_cohesion = 1 # cohesion coefficient
+c_cohesion = 0 # cohesion coefficient
 c_alignment = 1 # alignment coefficient
 c_separation = 2 # separation coefficient
 c_food = 100000 # food search coefficient
@@ -31,8 +31,8 @@ c_predators = 1 # predator avoidance coefficient
 N_predators = 10 # number of predators
 r_B = 10 # radius of boid sensing
 r_S = 2 # radius of separation
-v_predator = 5 # velocity
-reproduction_cutoff = 150  # health points required to reproduce
+v_predator = 9 # velocity
+reproduction_cutoff = 110  # health points required to reproduce
 healthGain = 10            # health points gained from eating a boid
 
 #food parameters
@@ -52,7 +52,7 @@ ax.set_zlim3d(0, L)
 
 boid_history = [len(boids)]
 predators_history = [len(predators)]
-food_history = []
+food_history = [len(foods)]
 
 all_boids_dead = False
 for gen in np.arange(0, generations+100, 100):
@@ -151,6 +151,7 @@ for gen in np.arange(0, generations+100, 100):
     # Update history
     boid_history.append(len(boids))
     predators_history.append(len(predators))
+    food_history.append(len(foods))
     # food history
     # Counter update to allow plotting with or without break
     timeCounter += 1
@@ -184,7 +185,7 @@ if doPlot:
     plt.figure()
     plt.plot(Timesteps, boid_history, color='darkturquoise', label='Boids' )
     plt.plot(Timesteps, predators_history, color='coral', label='Predators' )
-    #plt.plot(Timesteps, FoodAmountList, color='palegreen', label='Food' ) # No Foodhistory yet
+    plt.plot(Timesteps, food_history, color='palegreen', label='Food' ) # No Foodhistory yet
     plt.xlabel('$Timestep$')
     plt.ylabel("Numbers")
     plt.title("Populations of boids, predators and food over time")
