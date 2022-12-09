@@ -17,10 +17,11 @@ N_max_boids = 200 # maximum number of boids
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 15 # radius of food sensing
-r_FC = 3 # radius of food consumation REDUCE THIS
+r_FC = 3 # radius of food consumation 
 r_PA = 8 # radius of predator awareness
 v_boid = 3 # velocity
 L = 100 # length of the simulation area
+L_spawn = L/1.5 # length of the spawning area
 c_cohesion = 0 # cohesion coefficient
 c_alignment = 1 # alignment coefficient
 c_separation = 2 # separation coefficient
@@ -40,8 +41,8 @@ nFood = 5           # number of food at start
 # foodSpawnRate = 1   # number of food that spawn per generation
 foodSpawnRate = 0.01  # spawns one food every 1/foodSpawnRate generations  
 
-boids = [Boid(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
-predators = [Predator(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L),v_predator,r_S,L,dt) for _ in range(N_predators)]
+boids = [Boid(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
+predators = [Predator(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_predator,r_S,L,dt) for _ in range(N_predators)]
 foods = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(nFood)] 
 
 fig = plt.figure()
