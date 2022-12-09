@@ -73,11 +73,12 @@ for gen in np.arange(0, generations+100, 100):
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
         
-        if predator.chasing == True:                                            # if predator is chasing a boid
-            if predator.checkIfCaught():                                        # if predator catches boid
+        if predator.chasing == True:  
+            caughtBoid = predator.checkIfCaught()                                          # if predator is chasing a boid
+            if caughtBoid is not None:                                        # if predator catches boid
                 print("Predator caught boid")
                 predator.feed(healthGain)
-                boids.remove(predator.getChasedBoid()) if predator.getChasedBoid() in boids else None
+                boids.remove(caughtBoid) if caughtBoid in boids else None
                 if len(boids) < 1:
                     all_boids_dead = True
                     break
