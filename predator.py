@@ -73,9 +73,9 @@ class Predator:
 
             else:  # if the predator is chasing a prey, it will move towards the prey
                 # align velocity vector with prey position -> move towards prey
-                self.vx = self.chasedBoid.x - self.x
-                self.vy = self.chasedBoid.y - self.y
-                self.vz = self.chasedBoid.z - self.z
+                self.vx = np.mean([b.x for b in self.chasedBoid]) - self.x
+                self.vy = np.mean([b.y for b in self.chasedBoid]) - self.y
+                self.vz = np.mean([b.z for b in self.chasedBoid]) - self.z
 
             # normalize the velocity
             v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
