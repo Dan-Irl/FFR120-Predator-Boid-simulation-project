@@ -63,7 +63,7 @@ for gen in np.arange(0, generations+100, 100):
     print("====================================")
     
     # 1. Predators search for boids, chase them and eat them  
-    boid_targets = findClosestTarget(predators, boids, r_B, L)    # find closest boid targets for predators
+    boid_targets = findAllTargets(predators, boids, r_B, L)    # find closest boid targets for predators
 
     predatorSpawnLocations = []
     deadPredators = []
