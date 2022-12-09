@@ -80,7 +80,7 @@ for gen in range(generations):
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
         
-        if predator.chasing == True:  
+        if predator.chasing == True and not predator.resting:  
             caughtBoid = predator.checkIfCaught()                               # if predator is chasing a boid
             if caughtBoid is not None:                                          # if predator catches boid
                 predator.feed(healthGain)
@@ -89,17 +89,17 @@ for gen in range(generations):
                     all_boids_dead = True
                     break
 
-                if predator.checkReproduce(reproduction_cutoff) and not predator.resting:
+                if predator.checkReproduce(reproduction_cutoff):
                     predatorSpawnLocations.append(predator.getPosition())
                     predator.resting = True
                 predator.chasing = False
                 predator.chasedBoids = []
 
-            if predator.health < reproduction_cutoff:
-                predator.resting = False
+        if predator.health < reproduction_cutoff:
+            predator.resting = False
 
-            if predator.health < 1:
-                deadPredators.append(predator)
+        if predator.health < 1:
+            deadPredators.append(predator)
         predator.healthDecay()
         print(predator.health)
 
