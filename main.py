@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 5000
+generations = 10000
 dt = 1
 timeCounter = 0
 L = 500 # length of the simulation area
@@ -36,7 +36,7 @@ r_B = 25 # radius of boid sensing
 r_S = 7 # radius of separation
 v_predator = 6 # velocity
 reproduction_cutoff = 175  # health points required to reproduce
-healthGain = 25            # health points gained from eating a boid
+healthGain = 30            # health points gained from eating a boid
 
 #food parameters
 nFood = 75           # number of food at start
@@ -46,7 +46,7 @@ boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.n
 predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
 foods = [Food(np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01)) for _ in range(nFood)] 
 
-live_plotting = True
+live_plotting = False
 
 if live_plotting is True:
     fig = plt.figure()
