@@ -45,10 +45,6 @@ boids = [Boid(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.un
 predators = [Predator(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_predator,r_S,L,dt) for _ in range(N_predators)]
 foods = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(nFood)] 
 
-for predator in predators:
-    # print(predator.getPosition())
-    print(predator.getVelocity())
-
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.set_xlim3d(0, L)
@@ -78,7 +74,6 @@ for gen in np.arange(0, generations+100, 100):
         predator.checkRangeAndChase(boid_targets[predators.index(predator)])
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
-        print(predator.getPosition())
         
         if predator.chasing == True:  
             caughtBoid = predator.checkIfCaught()                                          # if predator is chasing a boid
