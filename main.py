@@ -29,12 +29,12 @@ c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
 # predator parameters (Tiger shark)
-N_predators = 5 # number of predators
-r_B = 25 # radius of boid sensing
-r_S = 5 # radius of separation
+N_predators = 15 # number of predators
+r_B = 40 # radius of boid sensing
+r_S = 7 # radius of separation
 v_predator = 6 # velocity
-reproduction_cutoff = 150  # health points required to reproduce
-healthGain = 10            # health points gained from eating a boid
+reproduction_cutoff = 175  # health points required to reproduce
+healthGain = 25            # health points gained from eating a boid
 
 #food parameters
 nFood = 50           # number of food at start
@@ -101,7 +101,6 @@ for gen in range(generations):
         if predator.health < 1:
             deadPredators.append(predator)
         predator.healthDecay()
-        print(predator.health)
 
     if all_boids_dead:
         print("All boids are dead")
@@ -109,7 +108,7 @@ for gen in range(generations):
 
     # 2. new predators spawn and dead predators are removed
     for pos in predatorSpawnLocations:
-        predators.append(Predator(pos[0], pos[1], pos[2], v_predator, r_S, L, dt))  # spawn new predators
+        predators.append(Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred), v_predator, r_S, L, dt))  # spawn new predators
     for predator in deadPredators:
         predators.remove(predator)                                                  # remove dead predators
 
