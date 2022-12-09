@@ -45,17 +45,17 @@ boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.n
 predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
 foods = [Food(np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01)) for _ in range(nFood)] 
 
-for boid in boids:
-    print(boid.getPosition())
 
+live_plotting = False
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.set_xlim3d(0, L)
-ax.set_ylim3d(0, L)
-ax.set_zlim3d(0, L)
-fig.tight_layout()
-fig.set_facecolor('#D6FFFF')
+if live_plotting is True:
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlim3d(0, L)
+    ax.set_ylim3d(0, L)
+    ax.set_zlim3d(0, L)
+    fig.tight_layout()
+    fig.set_facecolor('#D6FFFF')
 
 boid_history = [len(boids)]
 predators_history = [len(predators)]
@@ -177,29 +177,30 @@ for gen in range(generations):
         break  
     
     #PLotting
-    ax.cla()  # Clear the previous frame
-    ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids],color='blue', marker='o')
-    ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red', marker='D', s=100)
-    ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green',marker='P')
-    ax.set_facecolor('#D6FFFF')
-    ax.set_xlim3d(0, L)
-    ax.set_ylim3d(0, L)
-    ax.set_zlim3d(0, L)
-    # ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
-    # ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
-    # ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-    # ax.w_xaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
-    # ax.w_yaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
-    # ax.w_zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
-    # ax.set_xticks([])                               
-    # ax.set_yticks([])                               
-    # ax.set_zticks([]) 
-    # Add a text label with the particle count
-    label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
-    
-    # Pause for a fixed interval
-    plt.pause(0.04)
-    label1.remove()
+    if live_plotting is True:
+        ax.cla()  # Clear the previous frame
+        ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids],color='blue', marker='o')
+        ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red', marker='D', s=100)
+        ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green',marker='P')
+        ax.set_facecolor('#D6FFFF')
+        ax.set_xlim3d(0, L)
+        ax.set_ylim3d(0, L)
+        ax.set_zlim3d(0, L)
+        # ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+        # ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+        # ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+        # ax.w_xaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
+        # ax.w_yaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
+        # ax.w_zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
+        # ax.set_xticks([])                               
+        # ax.set_yticks([])                               
+        # ax.set_zticks([]) 
+        # Add a text label with the particle count
+        label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
+        
+        # Pause for a fixed interval
+        plt.pause(0.04)
+        label1.remove()
 
 plt.show()
 
