@@ -101,10 +101,14 @@ class Predator:
             self.chasing = True
             self.chasedBoid = boid_target
     
-    def checkIfCaught(self):
+    def checkIfCaught(self) -> bool:
         """Checks if predator has caught prey and if so, returns True"""
-        return dist(self.getPosition(), self.chasedBoid.getPosition()) <= self.catchRange
-
+        boid_in_range_bools = [dist(self.getPosition(), b.getPosition()) <= self.catchRange for b in self.chasedBoid]
+        indices_in_range = [i for i, x in enumerate(boid_in_range_bools) if x]
+        if len(indices_in_range) == 0:
+            return None
+        return self.chasedBoid[np.randomly.choice(indices_in_range)]
+        
     def feed(self, healthGain) -> None:
         """Increases health of predator upon feeding"""
         self.health += healthGain
