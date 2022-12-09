@@ -12,17 +12,17 @@ dt = 1
 timeCounter = 0
 
 # Boid parameters (Tuna)
-N_boids = 20 # number of boids 
+N_boids = 50 # number of boids 
 N_max_boids = 200 # maximum number of boids
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 15 # radius of food sensing
 r_FC = 3 # radius of food consumation 
 r_PA = 8 # radius of predator awareness
-v_boid = 3 # velocity
-L = 100 # length of the simulation area
+v_boid = 1 # velocity
+L = 500 # length of the simulation area
 L_spawn = L/1.5 # length of the spawning area
-c_cohesion = 0 # cohesion coefficient
+c_cohesion = 1 # cohesion coefficient
 c_alignment = 1 # alignment coefficient
 c_separation = 2 # separation coefficient
 c_food = 100000 # food search coefficient
@@ -32,7 +32,7 @@ c_predators = 1 # predator avoidance coefficient
 N_predators = 5 # number of predators
 r_B = 10 # radius of boid sensing
 r_S = 2 # radius of separation
-v_predator = 9 # velocity
+v_predator = 3 # velocity
 reproduction_cutoff = 110  # health points required to reproduce
 healthGain = 10            # health points gained from eating a boid
 
@@ -177,15 +177,15 @@ for gen in range(generations):
     ax.set_xlim3d(0, L)
     ax.set_ylim3d(0, L)
     ax.set_zlim3d(0, L)
-    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
-    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
-    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-    ax.w_xaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
-    ax.w_yaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
-    ax.w_zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
-    ax.set_xticks([])                               
-    ax.set_yticks([])                               
-    ax.set_zticks([]) 
+    # ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    # ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    # ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+    # ax.w_xaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
+    # ax.w_yaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
+    # ax.w_zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
+    # ax.set_xticks([])                               
+    # ax.set_yticks([])                               
+    # ax.set_zticks([]) 
     # Add a text label with the particle count
     label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
     
