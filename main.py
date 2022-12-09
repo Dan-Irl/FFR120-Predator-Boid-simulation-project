@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 1000
+generations = 10000
 dt = 1
 timeCounter = 0
 
@@ -58,12 +58,14 @@ predators_history = [len(predators)]
 food_history = [len(foods)]
 
 all_boids_dead = False
-for gen in np.arange(0, generations+100, 100):
-    print("Generation: ", gen)
-    print("Number of boids: ", len(boids))
-    print("Number of predators: ", len(predators))
-    print("Number of food: ", len(foods))
-    print("====================================")
+for gen in range(generations):
+
+    if gen in np.arange(0, generations+100, 100):
+        print("Generation: ", gen)
+        print("Number of boids: ", len(boids))
+        print("Number of predators: ", len(predators))
+        print("Number of food: ", len(foods))
+        print("====================================")
     
     # 1. Predators search for boids, chase them and eat them  
     boid_targets = findAllTargets(predators, boids, r_B, L)    # find closest boid targets for predators
@@ -188,7 +190,7 @@ for gen in np.arange(0, generations+100, 100):
     label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
     
     # Pause for a fixed interval
-    plt.pause(0.4)
+    plt.pause(0.04)
     label1.remove()
 
 plt.show()

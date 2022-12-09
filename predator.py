@@ -119,5 +119,5 @@ class Predator:
 
     def healthDecay(self):
         """Decays health of predator every time step"""
-        self.health -= 5*self.dt
+        self.health -= self.dt
 
