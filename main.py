@@ -50,6 +50,8 @@ ax = fig.add_subplot(111, projection='3d')
 ax.set_xlim3d(0, L)
 ax.set_ylim3d(0, L)
 ax.set_zlim3d(0, L)
+fig.tight_layout()
+fig.set_facecolor('#D6FFFF')
 
 boid_history = [len(boids)]
 predators_history = [len(predators)]
@@ -166,9 +168,25 @@ for gen in np.arange(0, generations+100, 100):
     
     #PLotting
     ax.cla()  # Clear the previous frame
-    ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids],color='blue')
-    #ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red')
-    #ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green')
+    ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids],color='blue', marker='o')
+    ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red', marker='D', s=100)
+    ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green',marker='P')
+    ax.set_facecolor('#D6FFFF')
+    ax.set_xlim3d(0, L)
+    ax.set_ylim3d(0, L)
+    ax.set_zlim3d(0, L)
+    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+    ax.w_xaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_yaxis.line.set_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
+    ax.set_xticks([])                               
+    ax.set_yticks([])                               
+    ax.set_zticks([]) 
+    # Add a text label with the particle count
+    label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
+    
     
     # Pause for a fixed interval
     # plt.pause(0.1)
