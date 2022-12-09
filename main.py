@@ -19,7 +19,7 @@ N_max_boids = 500 # maximum number of boids
 r_CA = 50 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 75 # radius of food sensing
-r_FC = 5 # radius of food consumation 
+r_FC = 7 # radius of food consumation 
 r_PA = 20 # radius of predator awareness
 v_boid = 2 # velocity 
 c_cohesion = 1 # cohesion coefficient
@@ -83,7 +83,6 @@ for gen in range(generations):
         if predator.chasing == True:  
             caughtBoid = predator.checkIfCaught()                               # if predator is chasing a boid
             if caughtBoid is not None:                                          # if predator catches boid
-                # print("Predator caught boid")
                 predator.feed(healthGain)
                 boids.remove(caughtBoid) if caughtBoid in boids else None
                 if len(boids) < 1:
@@ -95,13 +94,14 @@ for gen in range(generations):
                     predator.resting = True
                 predator.chasing = False
                 predator.chasedBoids = []
-            predator.healthDecay()
 
             if predator.health < reproduction_cutoff:
                 predator.resting = False
 
             if predator.health < 1:
                 deadPredators.append(predator)
+        predator.healthDecay()
+        print(predator.health)
 
     if all_boids_dead:
         print("All boids are dead")
