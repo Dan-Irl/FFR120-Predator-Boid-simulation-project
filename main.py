@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 100000
+generations = 5000
 dt = 1
 timeCounter = 0
 L = 500 # length of the simulation area
@@ -20,26 +20,27 @@ r_CA = 50 # radius of cohesion and alignment
 r_S = 5 # radius of separation
 r_F = 75 # radius of food sensing
 r_FC = 7 # radius of food consumation 
-r_PA = 20 # radius of predator awareness
+r_PA = 30 # radius of predator awareness
 v_boid = 2 # velocity 
-c_cohesion = 1 # cohesion coefficient
-c_alignment = 3 # alignment coefficient
-c_separation = 2 # separation coefficient
 c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
+c_cohesion = 1 # cohesion coefficient
+c_alignment = 3 # alignment coefficient
+c_separation = 2 # separation coefficient
+
+
 # predator parameters (Tiger shark)
-N_predators = 15 # number of predators
-r_B = 40 # radius of boid sensing
+N_predators = 10 # number of predators
+r_B = 25 # radius of boid sensing
 r_S = 7 # radius of separation
 v_predator = 6 # velocity
 reproduction_cutoff = 175  # health points required to reproduce
 healthGain = 25            # health points gained from eating a boid
 
 #food parameters
-nFood = 50           # number of food at start
-# foodSpawnRate = 1   # number of food that spawn per generation
-foodSpawnRate = 0.1  # spawns one food every 1/foodSpawnRate generations  
+nFood = 75           # number of food at start
+foodSpawnRate = 1/3  # spawns one food every 1/foodSpawnRate generations  
 
 boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
@@ -118,7 +119,6 @@ for gen in range(generations):
     
     # 3. The boids that are left search for food and predators
     boid_predator_neighbours = findAllTargets(boids, predators, r_PA, L) # find predators for boids in their radius of awareness
-    # boid_food_location = findAllTargets(boids, foods, r_F, L)            # finds all food in range for boids
     boid_food_targets = findClosestTarget(boids, foods, r_F, L)            # finds closest food for boids
 
     # 4. The boids that are left search for other boids and update their velocity and position
@@ -126,16 +126,10 @@ for gen in range(generations):
     boid_large_neighbours = findNeighbours(boids, r_CA, L)  # find neighbours for cohesion and alignment
     
     for boid in boids:
-        # boid.updateSmallFlock(boids, boid_small_neighbours[boids.index(boid)])    # update small flock 
-        # boid.updateLargeFlock(boids, boid_large_neighbours[boids.index(boid)])    # update large flock
         boid.updateSmallFlock(boids, boid_small_neighbours)                         # update small flock
         boid.updateLargeFlock(boids, boid_large_neighbours)                         # update large flock
 
         boid.updatePredators(boid_predator_neighbours[boids.index(boid)])           # update predator list
-
-    # Alternative 1: All foods in range
-        # boid.updateFoodList(boid_food_location[boids.index(boid)])                # update food list
-    # Alternative 2: Closest food
         boid.closestFood = boid_food_targets[boids.index(boid)]                     # update closest food
 
         # boid.updateVelocity(c_cohesion, c_separation, c_alignment, c_predators, c_food)
@@ -146,7 +140,6 @@ for gen in range(generations):
     food_boid_neighbours = findClosestTarget(foods, boids, r_FC, L)                                # find closest boid in range to eat food
     consumed_foods = [foods[i] for i in range(len(foods)) if food_boid_neighbours[i] is not None]  # food is added if there is a boid in range to eat it
     for consumed_food in consumed_foods:
-        # print("Boid ate food")
         # Create a copy of a boid after it has eaten food
         new_boid_coords = consumed_food.getPosition()
         foods.remove(consumed_food) if consumed_food in foods else None 
