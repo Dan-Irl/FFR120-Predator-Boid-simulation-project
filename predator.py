@@ -16,7 +16,7 @@ class Predator:
         self.L = L                          # size of the box
         self.health = 100
         self.chasing = False     
-        self.chasedBoids = None
+        self.chasedBoids = []
         self.resting = False
        
     def getPosition(self) -> tuple:
