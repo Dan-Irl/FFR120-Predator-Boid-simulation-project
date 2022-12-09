@@ -41,9 +41,9 @@ nFood = 5           # number of food at start
 # foodSpawnRate = 1   # number of food that spawn per generation
 foodSpawnRate = 0.01  # spawns one food every 1/foodSpawnRate generations  
 
-boids = [Boid(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
-predators = [Predator(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_predator,r_S,L,dt) for _ in range(N_predators)]
-foods = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(nFood)] 
+boids = [Boid(np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
+predators = [Predator(np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),v_predator,r_S,L,dt) for _ in range(N_predators)]
+foods = [Food(np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L)) for _ in range(nFood)] 
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
