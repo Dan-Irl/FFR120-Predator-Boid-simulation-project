@@ -7,43 +7,47 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 10000
+generations = 100000
 dt = 1
 timeCounter = 0
+L = 500 # length of the simulation area
+L_pred = L/1.5 # length of the predator area
 
 # Boid parameters (Tuna)
-N_boids = 50 # number of boids 
+N_boids = 100 # number of boids 
 N_max_boids = 200 # maximum number of boids
-r_CA = 8 # radius of cohesion and alignment
+r_CA = 50 # radius of cohesion and alignment
 r_S = 5 # radius of separation
-r_F = 15 # radius of food sensing
+r_F = 25 # radius of food sensing
 r_FC = 3 # radius of food consumation 
-r_PA = 8 # radius of predator awareness
-v_boid = 1 # velocity
-L = 500 # length of the simulation area
-L_spawn = L/1.5 # length of the spawning area
+r_PA = 12 # radius of predator awareness
+v_boid = 2 # velocity 
 c_cohesion = 1 # cohesion coefficient
-c_alignment = 1 # alignment coefficient
+c_alignment = 3 # alignment coefficient
 c_separation = 2 # separation coefficient
 c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
 # predator parameters (Tiger shark)
-N_predators = 5 # number of predators
-r_B = 10 # radius of boid sensing
-r_S = 2 # radius of separation
-v_predator = 3 # velocity
-reproduction_cutoff = 110  # health points required to reproduce
-healthGain = 10            # health points gained from eating a boid
+N_predators = 10 # number of predators
+r_B = 25 # radius of boid sensing
+r_S = 5 # radius of separation
+v_predator = 6 # velocity
+reproduction_cutoff = 150  # health points required to reproduce
+healthGain = 25            # health points gained from eating a boid
 
 #food parameters
-nFood = 5           # number of food at start
+nFood = 25           # number of food at start
 # foodSpawnRate = 1   # number of food that spawn per generation
 foodSpawnRate = 0.01  # spawns one food every 1/foodSpawnRate generations  
 
-boids = [Boid(np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
-predators = [Predator(np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),v_predator,r_S,L,dt) for _ in range(N_predators)]
-foods = [Food(np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L),np.clip(np.random.normal(L/2,L/4),0,L)) for _ in range(nFood)] 
+boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
+predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
+foods = [Food(np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01)) for _ in range(nFood)] 
+
+for boid in boids:
+    print(boid.getPosition())
+
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -89,11 +93,15 @@ for gen in range(generations):
 
                 if predator.checkReproduce(reproduction_cutoff):                                   # if predator is ready to reproduce 
                     predatorSpawnLocations.append(predator.getPosition())
-                    predator.health = 100
-                # predator.setResting(True)
                 predator.chasing = False
                 predator.chasedBoid = None
             predator.healthDecay()
+
+            if predator.resting == True and predator.health < 175:
+                predator.resting = False
+            elif predator.health >= 175:
+                predator.resting = True
+
             if predator.health < 1:
                 deadPredators.append(predator)
 
@@ -152,7 +160,7 @@ for gen in range(generations):
     # for i in range(foodSpawnRate):
     #     foods.append(Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)))
     if gen*dt % (1/foodSpawnRate) == 0:                                                                # spawn new food every 1/foodSpawnRate generations
-        foods.append(Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)))
+        foods.append(Food(np.clip(np.random.normal(L/2,L/2),0.01,L-0.01),np.clip(np.random.normal(L/2,L/2),0.01,L-0.01),np.clip(np.random.normal(L/2,L/2),0.01,L-0.01)))
 
     # Update history
     boid_history.append(len(boids))

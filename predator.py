@@ -40,29 +40,23 @@ class Predator:
         # check (periodic) boundary conditions
         if self.x < 0:
             self.x += self.L
-            self.vx = -self.vx
         elif self.x > self.L:
             self.x -= self.L
-            self.vx = -self.vx
         if self.y < 0:
             self.y += self.L
-            self.vy = -self.vy
         elif self.y > self.L:
             self.y -= self.L
-            self.vy = -self.vy
         if self.z < 0:
             self.z += self.L
-            self.vz = -self.vz
         elif self.z > self.L:
             self.z -= self.L
-            self.vz = -self.vz
 
     def updateVelocity(self):
         """function that updates the velocity of the predator"""
         if self.resting == True:
-            self.vx = 0
-            self.vy = 0
-            self.vz = 0
+            self.vx = 0.25*np.random.uniform(-1,1)*self.v0
+            self.vy = 0.25*np.random.uniform(-1,1)*self.v0
+            self.vz = 0.25*np.random.uniform(-1,1)*self.v0
         else:
             # if the predator is not chasing a prey, it will move randomly
             if self.chasing == False:

@@ -45,22 +45,16 @@ class Boid:
         # check (periodic) boundary conditions
         if self.x < 0:
             self.x += self.L
-            self.vx = -self.vx
         elif self.x > self.L:
             self.x -= self.L
-            self.vx = -self.vx
         if self.y < 0:
             self.y += self.L
-            self.vy = -self.vy
         elif self.y > self.L:
             self.y -= self.L
-            self.vy = -self.vy
         if self.z < 0:
             self.z += self.L
-            self.vz = -self.vz
         elif self.z > self.L:
             self.z -= self.L
-            self.vz = -self.vz
     
     #function that updates the position of the boid using cohesion, separation,
     #alignment, predators, food
@@ -105,11 +99,6 @@ class Boid:
         # if self.foodList is not None:
         if self.closestFood is not None:
             #food
-            # fx = np.mean([i.x for i in self.foodlist])-self.x
-            # fy = np.mean([i.y for i in self.foodlist])-self.y
-            # fz = np.mean([i.z for i in self.foodlist])-self.z
-            
-            # fx,fy,fz = tuple(map(lambda i, j: i - j, self.getPosition() , self.closestFood.getPosition()))
             fx = self.closestFood.x - self.x
             fy = self.closestFood.y - self.y
             fz = self.closestFood.z - self.z
