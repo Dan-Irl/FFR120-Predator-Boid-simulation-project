@@ -9,9 +9,9 @@ class Predator:
         self.z = z
         self.v0 = v0
         self.dt = dt
-        self.vx = v0
-        self.vy = v0
-        self.vz = v0
+        self.vx = np.random.rand()*v0
+        self.vy = np.random.rand()*v0
+        self.vz = np.random.rand()*v0
         self.catchRange = catchRange        # range in which the predator can catch a prey
         self.L = L                          # size of the box
         self.health = 100
