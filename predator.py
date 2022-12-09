@@ -16,7 +16,7 @@ class Predator:
         self.L = L                          # size of the box
         self.health = 100
         self.chasing = False     
-        self.chasedBoid = None
+        self.chasedBoids = None
         self.resting = False
        
     def getPosition(self) -> tuple:
@@ -27,9 +27,9 @@ class Predator:
         """Returns velocity of predator"""
         return (self.vx,self.vy,self.vz)
 
-    def getChasedBoid(self):
+    def getchasedBoids(self):
         """Returns the chased boid of the predator"""
-        return self.chasedBoid
+        return self.chasedBoids
     
     def updatePosition(self):
         """Updates the position of the predator using perodic boundary condictions."""
@@ -73,9 +73,9 @@ class Predator:
 
             else:  # if the predator is chasing a prey, it will move towards the prey
                 # align velocity vector with prey position -> move towards prey
-                self.vx = np.mean([b.x for b in self.chasedBoid]) - self.x
-                self.vy = np.mean([b.y for b in self.chasedBoid]) - self.y
-                self.vz = np.mean([b.z for b in self.chasedBoid]) - self.z
+                self.vx = np.mean([b.x for b in self.chasedBoids]) - self.x
+                self.vy = np.mean([b.y for b in self.chasedBoids]) - self.y
+                self.vz = np.mean([b.z for b in self.chasedBoids]) - self.z
 
             # normalize the velocity
             v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
@@ -95,19 +95,19 @@ class Predator:
         """Sets the predator state to not resting"""
         self.resting = False
 
-    def checkRangeAndChase(self, boid_target):
+    def checkRangeAndChase(self, boid_targets):
         """Checks if predator is in range of target and if so, starts chasing it"""
-        if boid_target is not None:
+        if len(boid_targets) > 0:
             self.chasing = True
-            self.chasedBoid = boid_target
+            self.chasedBoids = boid_targets
     
     def checkIfCaught(self) -> bool:
         """Checks if predator has caught prey and if so, returns True"""
-        boid_in_range_bools = [dist(self.getPosition(), b.getPosition()) <= self.catchRange for b in self.chasedBoid]
+        boid_in_range_bools = [dist(self.getPosition(), b.getPosition()) <= self.catchRange for b in self.chasedBoids]
         indices_in_range = [i for i, x in enumerate(boid_in_range_bools) if x]
         if len(indices_in_range) == 0:
             return None
-        return self.chasedBoid[np.randomly.choice(indices_in_range)]
+        return self.chasedBoids[np.random.choice(indices_in_range)]
         
     def feed(self, healthGain) -> None:
         """Increases health of predator upon feeding"""

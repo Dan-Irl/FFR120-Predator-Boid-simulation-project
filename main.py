@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 500000
+generations = 1000
 dt = 1
 timeCounter = 0
 
 # Boid parameters (Tuna)
-N_boids = 10 # number of boids 
+N_boids = 20 # number of boids 
 N_max_boids = 200 # maximum number of boids
 r_CA = 8 # radius of cohesion and alignment
 r_S = 5 # radius of separation
@@ -29,7 +29,7 @@ c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
 # predator parameters (Tiger shark)
-N_predators = 10 # number of predators
+N_predators = 5 # number of predators
 r_B = 10 # radius of boid sensing
 r_S = 2 # radius of separation
 v_predator = 9 # velocity
@@ -44,6 +44,10 @@ foodSpawnRate = 0.01  # spawns one food every 1/foodSpawnRate generations
 boids = [Boid(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L_spawn),np.random.uniform(L_spawn),np.random.uniform(L_spawn),v_predator,r_S,L,dt) for _ in range(N_predators)]
 foods = [Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)) for _ in range(nFood)] 
+
+for predator in predators:
+    # print(predator.getPosition())
+    print(predator.getVelocity())
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -74,6 +78,7 @@ for gen in np.arange(0, generations+100, 100):
         predator.checkRangeAndChase(boid_targets[predators.index(predator)])
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
+        print(predator.getPosition())
         
         if predator.chasing == True:  
             caughtBoid = predator.checkIfCaught()                                          # if predator is chasing a boid
@@ -187,9 +192,9 @@ for gen in np.arange(0, generations+100, 100):
     # Add a text label with the particle count
     label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
     
-    
     # Pause for a fixed interval
-    # plt.pause(0.1)
+    plt.pause(0.4)
+    label1.remove()
 
 plt.show()
 
