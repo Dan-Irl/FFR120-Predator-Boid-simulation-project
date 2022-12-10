@@ -56,7 +56,7 @@ class Predator:
         if self.resting == True:
             self.vx = 0.25*np.random.normal(self.vy,abs(self.vz*0.5))
             self.vy = 0.25*np.random.normal(self.vy,abs(self.vz*0.5))
-            self.vz = 0.25*np.random.normal(self.vy,abs(self.vz*0.5))
+            self.vz = 0.25*np.random.normal(self.vz,abs(self.vz*0.5))
         else:
             # if the predator is not chasing a prey, it will move randomly
             if self.chasing == False:
