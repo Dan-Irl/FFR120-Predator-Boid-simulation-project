@@ -14,7 +14,7 @@ L = 500 # length of the simulation area
 L_pred = L/1.5 # length of the predator area
 
 # Boid parameters (Tuna)
-N_boids = 250 # number of boids 
+N_boids = 200 # number of boids 
 N_max_boids = 500 # maximum number of boids
 r_CA = 50 # radius of cohesion and alignment
 r_S = 5 # radius of separation
@@ -26,12 +26,12 @@ c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
 c_cohesion = 1 # cohesion coefficient
-c_alignment = 3 # alignment coefficient
-c_separation = 2 # separation coefficient
+c_alignment = 1 # alignment coefficient
+c_separation = 1 # separation coefficient
 
 
 # predator parameters (Tiger shark)
-N_predators = 10 # number of predators
+N_predators = 5 # number of predators
 r_B = 25 # radius of boid sensing
 r_S = 7 # radius of separation
 v_predator = 6 # velocity
@@ -40,7 +40,7 @@ healthGain = 30            # health points gained from eating a boid
 
 #food parameters
 nFood = 75           # number of food at start
-foodSpawnRate = 1/3  # spawns one food every 1/foodSpawnRate generations  
+foodSpawnRate = 1/4  # spawns one food every 1/foodSpawnRate generations  
 
 boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
