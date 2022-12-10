@@ -54,9 +54,15 @@ class Predator:
     def updateVelocity(self):
         """function that updates the velocity of the predator"""
         if self.resting == True:
-            self.vx = 0.25*np.random.normal(self.vx,abs(self.vx*0.5))
-            self.vy = 0.25*np.random.normal(self.vy,abs(self.vy*0.5))
-            self.vz = 0.25*np.random.normal(self.vz,abs(self.vz*0.5))
+            self.vx = np.random.normal(self.vx,abs(self.vx*0.5))
+            self.vy = np.random.normal(self.vy,abs(self.vy*0.5))
+            self.vz = np.random.normal(self.vz,abs(self.vz*0.5))
+
+            # normalize the velocity to 25% of constant speed
+            v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
+            self.vx = self.vx*0.25*self.v0/v_norm
+            self.vy = self.vy*0.25*self.v0/v_norm
+            self.vz = self.vz*0.25*self.v0/v_norm
         else:
             # if the predator is not chasing a prey, it will move randomly
             if self.chasing == False:               
@@ -70,11 +76,11 @@ class Predator:
                 self.vy = np.mean([b.y for b in self.chasedBoids]) - self.y
                 self.vz = np.mean([b.z for b in self.chasedBoids]) - self.z
 
-        # normalize the velocity
-        v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
-        self.vx = self.vx*self.v0/v_norm
-        self.vy = self.vy*self.v0/v_norm
-        self.vz = self.vz*self.v0/v_norm
+            # normalize the velocity
+            v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
+            self.vx = self.vx*self.v0/v_norm
+            self.vy = self.vy*self.v0/v_norm
+            self.vz = self.vz*self.v0/v_norm
 
     def checkRangeAndChase(self, boid_targets):
         """Checks if predator is in range of target and if so, starts chasing it"""
