@@ -59,8 +59,7 @@ class Predator:
             self.vz = 0.25*np.random.normal(self.vz,abs(self.vz*0.5))
         else:
             # if the predator is not chasing a prey, it will move randomly
-            if self.chasing == False:
-                
+            if self.chasing == False:               
                 self.vx = np.random.normal(self.vx,abs(self.vx*0.5))
                 self.vy = np.random.normal(self.vy,abs(self.vy*0.5))
                 self.vz = np.random.normal(self.vz,abs(self.vz*0.5))
@@ -71,23 +70,11 @@ class Predator:
                 self.vy = np.mean([b.y for b in self.chasedBoids]) - self.y
                 self.vz = np.mean([b.z for b in self.chasedBoids]) - self.z
 
-            # normalize the velocity
-            v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
-            self.vx = self.vx*self.v0/v_norm
-            self.vy = self.vy*self.v0/v_norm
-            self.vz = self.vz*self.v0/v_norm
-
-    def rest(self):
-        """Sets the predator state to resting"""
-        self.resting = True
-
-    def checkResting(self):
-        """Returns True if perdator is resting otherwise False"""
-        return self.resting
-    
-    def awaken(self):
-        """Sets the predator state to not resting"""
-        self.resting = False
+        # normalize the velocity
+        v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
+        self.vx = self.vx*self.v0/v_norm
+        self.vy = self.vy*self.v0/v_norm
+        self.vz = self.vz*self.v0/v_norm
 
     def checkRangeAndChase(self, boid_targets):
         """Checks if predator is in range of target and if so, starts chasing it"""
