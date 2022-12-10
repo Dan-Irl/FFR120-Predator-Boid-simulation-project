@@ -54,8 +54,8 @@ class Predator:
     def updateVelocity(self):
         """function that updates the velocity of the predator"""
         if self.resting == True:
-            self.vx = 0.25*np.random.normal(self.vy,abs(self.vz*0.5))
-            self.vy = 0.25*np.random.normal(self.vy,abs(self.vz*0.5))
+            self.vx = 0.25*np.random.normal(self.vx,abs(self.vx*0.5))
+            self.vy = 0.25*np.random.normal(self.vy,abs(self.vy*0.5))
             self.vz = 0.25*np.random.normal(self.vz,abs(self.vz*0.5))
         else:
             # if the predator is not chasing a prey, it will move randomly
