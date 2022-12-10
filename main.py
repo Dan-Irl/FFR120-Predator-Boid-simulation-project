@@ -32,10 +32,10 @@ c_separation = 1 # separation coefficient
 
 # predator parameters (Tiger shark)
 N_predators = 5 # number of predators
-r_B = 25 # radius of boid sensing
+r_B = 20 # radius of boid sensing
 r_CB = 7 # radius for catching a boid
 v_predator = 6 # velocity
-reproduction_cutoff = 175  # health points required to reproduce
+reproduction_cutoff = 200  # health points required to reproduce
 healthGain = 30            # health points gained from eating a boid
 
 #food parameters
