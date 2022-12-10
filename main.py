@@ -39,8 +39,8 @@ reproduction_cutoff = 175  # health points required to reproduce
 healthGain = 30            # health points gained from eating a boid
 
 #food parameters
-nFood = 75           # number of food at start
-foodSpawnRate = 1/4  # spawns one food every 1/foodSpawnRate generations  
+nFood = 75                 # number of food at start
+foodSpawnRate = 1/3        # spawns one food every 1/foodSpawnRate generations  
 
 boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
@@ -148,7 +148,7 @@ for gen in range(generations):
         
     # 6. New food spawns
     if gen*dt % (1/foodSpawnRate) == 0:                                                                # spawn new food every 1/foodSpawnRate generations
-        foods.append(Food(np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01)))
+        foods.append(Food(np.clip(np.random.normal(L/2,L/6),0.01,L-0.01),np.clip(np.random.normal(L/2,L/6),0.01,L-0.01),np.clip(np.random.normal(L/2,L/6),0.01,L-0.01)))
 
     # Update history
     boid_history.append(len(boids))
