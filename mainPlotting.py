@@ -46,7 +46,6 @@ predators_history_parameter = []
 food_history_parameter = []
 
 ### PARAMETER TEST OF INTREST ###
-
 c_cohesion_list = np.linspace(0, 5, 11)
 
 for c_cohesion in c_cohesion_list:
@@ -173,9 +172,9 @@ for c_cohesion in c_cohesion_list:
         predators_history_avarage.append(predators_history[-1])
         food_history_avarage.append(food_history[-1])
     
-    boid_history_parameter = np.mean(boid_history_avarage)
-    predators_history_parameter = np.mean(predators_history_avarage)
-    food_history_parameter = np.mean(food_history_avarage)
+    boid_history_parameter.append(np.mean(boid_history_avarage))
+    predators_history_parameter.append(np.mean(predators_history_avarage))
+    food_history_parameter.append(np.mean(food_history_avarage))
 
 #PLOTTING for graphs (Population dynamics over simulation)
 doPlot = True
