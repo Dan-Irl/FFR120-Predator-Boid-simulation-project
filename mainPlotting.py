@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 10000
+generations = 5000
 dt = 1
 timeCounter = 0
 L = 500 # length of the simulation area
 L_pred = L/1.5 # length of the predator area
 
 # Boid parameters (Tuna)
-N_boids = 200 # number of boids 
+N_boids = 100 # number of boids 
 N_max_boids = 500 # maximum number of boids
 r_CA = 50 # radius of cohesion and alignment
 r_S = 5 # radius of separation
@@ -38,8 +38,8 @@ reproduction_cutoff = 200  # health points required to reproduce
 healthGain = 30            # health points gained from eating a boid
 
 #food parameters
-nFood = 75                 # number of food at start
-foodSpawnRate = 1/3        # spawns one food every 1/foodSpawnRate generations
+nFood = 50                 # number of food at start
+foodSpawnRate = 1/4        # spawns one food every 1/foodSpawnRate generations
 
 boid_history_parameter = []
 predators_history_parameter = []
@@ -56,6 +56,8 @@ for c_cohesion in c_cohesion_list:
     
     #repeat simulation 5 times to get an average
     for _ in range(4):   
+        print("parameter = " + str(c_cohesion) + ", run " + str(_+1))
+
         boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
         predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_CB,L,dt) for _ in range(N_predators)]
         foods = [Food(np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01)) for _ in range(nFood)] 
@@ -168,9 +170,9 @@ for c_cohesion in c_cohesion_list:
                 break  
             
         
-        boid_history_avarage.append(boid_history[-1])
-        predators_history_avarage.append(predators_history[-1])
-        food_history_avarage.append(food_history[-1])
+        boid_history_avarage.append(np.mean(boid_history[1000:]))
+        predators_history_avarage.append(np.mean(predators_history[1000:]))
+        food_history_avarage.append(np.mean(food_history[1000:]))
     
     boid_history_parameter.append(np.mean(boid_history_avarage))
     predators_history_parameter.append(np.mean(predators_history_avarage))
