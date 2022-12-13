@@ -7,3 +7,5 @@ The swarm consists of [Boids](https://www.red3d.com/cwr/boids/) that follow a si
 ![Boid simulation](https://www.red3d.com/cwr/boids/images/flocking_around_19.gif)
 
 The predators on the other hand will move around the space hunting the boids diminishing their numbers and increasing theirs.
+
+To install dependencies run install_dependencies.py
