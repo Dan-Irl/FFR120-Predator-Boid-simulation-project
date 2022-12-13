@@ -16,7 +16,7 @@ class Predator:
         self.L = L                          # size of the box
         self.health = 100
         self.chasing = False     
-        self.chasedBoids = None
+        self.chasedBoids = []
         self.resting = False
        
     def getPosition(self) -> tuple:
@@ -54,16 +54,21 @@ class Predator:
     def updateVelocity(self):
         """function that updates the velocity of the predator"""
         if self.resting == True:
-            self.vx = 0.25*np.random.uniform(-1,1)*self.v0
-            self.vy = 0.25*np.random.uniform(-1,1)*self.v0
-            self.vz = 0.25*np.random.uniform(-1,1)*self.v0
+            self.vx = np.random.normal(self.vx,abs(self.vx*0.5))
+            self.vy = np.random.normal(self.vy,abs(self.vy*0.5))
+            self.vz = np.random.normal(self.vz,abs(self.vz*0.5))
+
+            # normalize the velocity to 25% of constant speed
+            v_norm = np.linalg.norm([self.vx, self.vy, self.vz])
+            self.vx = self.vx*0.25*self.v0/v_norm
+            self.vy = self.vy*0.25*self.v0/v_norm
+            self.vz = self.vz*0.25*self.v0/v_norm
         else:
             # if the predator is not chasing a prey, it will move randomly
-            if self.chasing == False:
-                
+            if self.chasing == False:               
                 self.vx = np.random.normal(self.vx,abs(self.vx*0.5))
                 self.vy = np.random.normal(self.vy,abs(self.vy*0.5))
-                self.vz = np.random.normal(self.vy,abs(self.vy*0.5))
+                self.vz = np.random.normal(self.vz,abs(self.vz*0.5))
 
             else:  # if the predator is chasing a prey, it will move towards the prey
                 # align velocity vector with prey position -> move towards prey
@@ -76,18 +81,6 @@ class Predator:
             self.vx = self.vx*self.v0/v_norm
             self.vy = self.vy*self.v0/v_norm
             self.vz = self.vz*self.v0/v_norm
-
-    def rest(self):
-        """Sets the predator state to resting"""
-        self.resting = True
-
-    def checkResting(self):
-        """Returns True if perdator is resting otherwise False"""
-        return self.resting
-    
-    def awaken(self):
-        """Sets the predator state to not resting"""
-        self.resting = False
 
     def checkRangeAndChase(self, boid_targets):
         """Checks if predator is in range of target and if so, starts chasing it"""

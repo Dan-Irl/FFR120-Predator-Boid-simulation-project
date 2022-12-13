@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Parameters
-generations = 100000
+generations = 5000
 dt = 1
 timeCounter = 0
 L = 500 # length of the simulation area
@@ -15,36 +15,35 @@ L_pred = L/1.5 # length of the predator area
 
 # Boid parameters (Tuna)
 N_boids = 100 # number of boids 
-N_max_boids = 200 # maximum number of boids
+N_max_boids = 500 # maximum number of boids
 r_CA = 50 # radius of cohesion and alignment
 r_S = 5 # radius of separation
-r_F = 25 # radius of food sensing
-r_FC = 3 # radius of food consumation 
-r_PA = 12 # radius of predator awareness
+r_F = 75 # radius of food sensing
+r_FC = 7 # radius of food consumation 
+r_PA = 30 # radius of predator awareness
 v_boid = 2 # velocity 
-c_cohesion = 1 # cohesion coefficient
-c_alignment = 3 # alignment coefficient
-c_separation = 2 # separation coefficient
 c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
+c_cohesion = 1 # cohesion coefficient
+c_alignment = 1 # alignment coefficient
+c_separation = 1 # separation coefficient
+
 # predator parameters (Tiger shark)
-N_predators = 10 # number of predators
-r_B = 25 # radius of boid sensing
-r_S = 5 # radius of separation
+N_predators = 5 # number of predators
+r_B = 20 # radius of boid sensing
+r_CB = 7 # radius for catching a boid
 v_predator = 6 # velocity
 reproduction_cutoff = 150  # health points required to reproduce
-healthGain = 25            # health points gained from eating a boid
+healthGain = 30            # health points gained from eating a boid
 
 #food parameters
-nFood = 25           # number of food at start
-# foodSpawnRate = 1   # number of food that spawn per generation
-foodSpawnRate = 0.01  # spawns one food every 1/foodSpawnRate generations  
+nFood = 50                 # number of food at start
+foodSpawnRate = 1/4        # spawns one food every 1/foodSpawnRate generations  
 
 boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
-predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_S,L,dt) for _ in range(N_predators)]
+predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_CB,L,dt) for _ in range(N_predators)]
 foods = [Food(np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01),np.clip(np.random.normal(L/2,L/4),0.01,L-0.01)) for _ in range(nFood)] 
-
 
 live_plotting = False
 
@@ -81,29 +80,27 @@ for gen in range(generations):
         predator.updateVelocity()                                               # update velocity of predator
         predator.updatePosition()                                               # update position of predator
         
-        if predator.chasing == True:  
-            caughtBoid = predator.checkIfCaught()                                          # if predator is chasing a boid
-            if caughtBoid is not None:                                        # if predator catches boid
-                print("Predator caught boid")
+        if predator.chasing == True and not predator.resting:  
+            caughtBoid = predator.checkIfCaught()                               # if predator is chasing a boid
+            if caughtBoid is not None:                                          # if predator catches boid
                 predator.feed(healthGain)
                 boids.remove(caughtBoid) if caughtBoid in boids else None
                 if len(boids) < 1:
                     all_boids_dead = True
                     break
 
-                if predator.checkReproduce(reproduction_cutoff):                                   # if predator is ready to reproduce 
+                if predator.checkReproduce(reproduction_cutoff):
                     predatorSpawnLocations.append(predator.getPosition())
+                    predator.resting = True
                 predator.chasing = False
-                predator.chasedBoid = None
-            predator.healthDecay()
+                predator.chasedBoids = []
 
-            if predator.resting == True and predator.health < 175:
-                predator.resting = False
-            elif predator.health >= 175:
-                predator.resting = True
+        if predator.health < reproduction_cutoff:
+            predator.resting = False
 
-            if predator.health < 1:
-                deadPredators.append(predator)
+        if predator.health < 1:
+            deadPredators.append(predator)
+        predator.healthDecay()
 
     if all_boids_dead:
         print("All boids are dead")
@@ -111,7 +108,7 @@ for gen in range(generations):
 
     # 2. new predators spawn and dead predators are removed
     for pos in predatorSpawnLocations:
-        predators.append(Predator(pos[0], pos[1], pos[2], v_predator, r_S, L, dt))  # spawn new predators
+        predators.append(Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred), v_predator, r_CB, L, dt))  # spawn new predators
     for predator in deadPredators:
         predators.remove(predator)                                                  # remove dead predators
 
@@ -121,7 +118,6 @@ for gen in range(generations):
     
     # 3. The boids that are left search for food and predators
     boid_predator_neighbours = findAllTargets(boids, predators, r_PA, L) # find predators for boids in their radius of awareness
-    # boid_food_location = findAllTargets(boids, foods, r_F, L)            # finds all food in range for boids
     boid_food_targets = findClosestTarget(boids, foods, r_F, L)            # finds closest food for boids
 
     # 4. The boids that are left search for other boids and update their velocity and position
@@ -129,16 +125,10 @@ for gen in range(generations):
     boid_large_neighbours = findNeighbours(boids, r_CA, L)  # find neighbours for cohesion and alignment
     
     for boid in boids:
-        # boid.updateSmallFlock(boids, boid_small_neighbours[boids.index(boid)])    # update small flock 
-        # boid.updateLargeFlock(boids, boid_large_neighbours[boids.index(boid)])    # update large flock
         boid.updateSmallFlock(boids, boid_small_neighbours)                         # update small flock
         boid.updateLargeFlock(boids, boid_large_neighbours)                         # update large flock
 
         boid.updatePredators(boid_predator_neighbours[boids.index(boid)])           # update predator list
-
-    # Alternative 1: All foods in range
-        # boid.updateFoodList(boid_food_location[boids.index(boid)])                # update food list
-    # Alternative 2: Closest food
         boid.closestFood = boid_food_targets[boids.index(boid)]                     # update closest food
 
         # boid.updateVelocity(c_cohesion, c_separation, c_alignment, c_predators, c_food)
@@ -149,7 +139,6 @@ for gen in range(generations):
     food_boid_neighbours = findClosestTarget(foods, boids, r_FC, L)                                # find closest boid in range to eat food
     consumed_foods = [foods[i] for i in range(len(foods)) if food_boid_neighbours[i] is not None]  # food is added if there is a boid in range to eat it
     for consumed_food in consumed_foods:
-        print("Boid ate food")
         # Create a copy of a boid after it has eaten food
         new_boid_coords = consumed_food.getPosition()
         foods.remove(consumed_food) if consumed_food in foods else None 
@@ -157,10 +146,8 @@ for gen in range(generations):
             boids.append(Boid(new_boid_coords[0],new_boid_coords[1],new_boid_coords[2],v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L))
         
     # 6. New food spawns
-    # for i in range(foodSpawnRate):
-    #     foods.append(Food(np.random.uniform(L),np.random.uniform(L),np.random.uniform(L)))
     if gen*dt % (1/foodSpawnRate) == 0:                                                                # spawn new food every 1/foodSpawnRate generations
-        foods.append(Food(np.clip(np.random.normal(L/2,L/2),0.01,L-0.01),np.clip(np.random.normal(L/2,L/2),0.01,L-0.01),np.clip(np.random.normal(L/2,L/2),0.01,L-0.01)))
+        foods.append(Food(np.clip(np.random.normal(L/2,L/5),0.01,L-0.01),np.clip(np.random.normal(L/2,L/5),0.01,L-0.01),np.clip(np.random.normal(L/2,L/5),0.01,L-0.01)))
 
     # Update history
     boid_history.append(len(boids))
@@ -180,7 +167,7 @@ for gen in range(generations):
     if live_plotting is True:
         ax.cla()  # Clear the previous frame
         ax.scatter([b.x for b in boids],[b.y for b in boids],[b.z for b in boids],color='blue', marker='o')
-        ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red', marker='D', s=100)
+        ax.scatter([p.x for p in predators],[p.y for p in predators],[p.z for p in predators],color='red', marker='D', s=70)
         ax.scatter([f.x for f in foods],[f.y for f in foods],[f.z for f in foods],color='green',marker='P')
         ax.set_facecolor('#D6FFFF')
         ax.set_xlim3d(0, L)
@@ -196,7 +183,7 @@ for gen in range(generations):
         # ax.set_yticks([])                               
         # ax.set_zticks([]) 
         # Add a text label with the particle count
-        label1 = fig.text(0.05,0.05, f"Particle count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
+        label1 = fig.text(0.05,0.05, f"Boid count: {len(boids)}, Predator count: {len(predators)}, Food count: {len(foods)}", )
         
         # Pause for a fixed interval
         plt.pause(0.04)
