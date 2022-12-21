@@ -6,6 +6,10 @@ from find_neighbours import findNeighbours, findClosestTarget, findTarget, findA
 import matplotlib.pyplot as plt
 import numpy as np
 
+cb_colors = ['#377eb8', '#ff7f00', '#4daf4a',
+            '#f781bf', '#a65628', '#984ea3',
+            '#999999', '#e41a1c', '#dede00']
+
 #Parameters
 generations = 5000
 dt = 1
@@ -188,11 +192,10 @@ for gen in range(generations):
         # Pause for a fixed interval
         plt.pause(0.04)
         label1.remove()
-
+print('Done')
 plt.show()
 
-#PLOTTING for graphs (PopDyn over simulation)
-doPlot = False
+# %% PLOTTING for graphs (PopDyn over simulation)
 doPlot = True
 if doPlot:
     Timesteps = list(range(timeCounter+1))
@@ -201,11 +204,13 @@ if doPlot:
     #print(len(boid_history))
     #print(len(predators_history))
     plt.figure()
-    plt.plot(Timesteps, boid_history, color='darkturquoise', label='Boids' )
-    plt.plot(Timesteps, predators_history, color='coral', label='Predators' )
-    plt.plot(Timesteps, food_history, color='palegreen', label='Food' ) # No Foodhistory yet
-    plt.xlabel('$Timestep$')
-    plt.ylabel("Numbers")
-    plt.title("Populations of boids, predators and food over time")
-    plt.legend()
+    plt.plot(Timesteps, boid_history, color=cb_colors[0], label='Boids' )
+    plt.plot(Timesteps, predators_history, color=cb_colors[7], label='Predators' )
+    plt.plot(Timesteps, food_history, color=cb_colors[8], label='Food' ) 
+    plt.xlabel('time step', fontsize=13)
+    plt.ylabel("population size", fontsize=13)
+    plt.xticks(np.arange(0, timeCounter+1, 2.5e3), fontsize=12)
+    plt.yticks(np.arange(0, max(boid_history), 50), fontsize=12)
+    plt.legend(fontsize=12)
+    plt.savefig('PopDyn.png', dpi=300)
     plt.show()

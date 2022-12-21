@@ -6,8 +6,12 @@ from find_neighbours import findNeighbours, findClosestTarget, findTarget, findA
 import matplotlib.pyplot as plt
 import numpy as np
 
+cb_colors = ['#377eb8', '#ff7f00', '#4daf4a',
+            '#f781bf', '#a65628', '#984ea3',
+            '#999999', '#e41a1c', '#dede00']
+
 #Parameters
-generations = 5000
+generations = 10000
 dt = 1
 timeCounter = 0
 L = 500 # length of the simulation area
@@ -25,7 +29,7 @@ v_boid = 2 # velocity
 c_food = 100000 # food search coefficient
 c_predators = 1 # predator avoidance coefficient
 
-#c_cohesion = 1 # cohesion coefficient
+c_cohesion = 1 # cohesion coefficient
 c_alignment = 1 # alignment coefficient
 c_separation = 1 # separation coefficient
 
@@ -46,17 +50,17 @@ predators_history_parameter = []
 food_history_parameter = []
 
 ### PARAMETER TEST OF INTREST ###
-c_cohesion_list = np.linspace(0, 5, 11)
+c_separation_list = np.linspace(0, 3, 11)
 
-for c_cohesion in c_cohesion_list:
+for c_separation in c_separation_list:
     
     boid_history_avarage = []
     predators_history_avarage = []
     food_history_avarage = []
     
     #repeat simulation 5 times to get an average
-    for _ in range(4):   
-        print("parameter = " + str(c_cohesion) + ", run " + str(_+1))
+    for _ in range(5):   
+        print("parameter = " + str(c_separation) + ", run " + str(_+1))
 
         boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
         predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_CB,L,dt) for _ in range(N_predators)]
@@ -169,15 +173,16 @@ for c_cohesion in c_cohesion_list:
                 print("All predators are dead")
                 break  
             
-        
-        boid_history_avarage.append(np.mean(boid_history[1000:]))
-        predators_history_avarage.append(np.mean(predators_history[1000:]))
-        food_history_avarage.append(np.mean(food_history[1000:]))
+        boid_history_avarage.append(np.mean(boid_history))
+        predators_history_avarage.append(np.mean(predators_history))
+        food_history_avarage.append(np.mean(food_history))
     
     boid_history_parameter.append(np.mean(boid_history_avarage))
     predators_history_parameter.append(np.mean(predators_history_avarage))
     food_history_parameter.append(np.mean(food_history_avarage))
+print("Done")
 
+# %%
 #PLOTTING for graphs (Population dynamics over simulation)
 doPlot = True
 if doPlot:
@@ -187,11 +192,13 @@ if doPlot:
     #print(len(boid_history))
     #print(len(predators_history))
     plt.figure()
-    plt.plot(c_cohesion_list, boid_history_parameter, color='darkturquoise', label='Boids' )
-    plt.plot(c_cohesion_list, predators_history_parameter, color='coral', label='Predators' )
-    plt.plot(c_cohesion_list, food_history_parameter, color='palegreen', label='Food' ) # No Foodhistory yet
-    plt.xlabel('$c_{cohesion}$')
-    plt.ylabel("Avarage end population")
-    plt.title("Populations of boids, predators and food over time")
-    plt.legend()
+    plt.scatter(c_separation_list, boid_history_parameter, color=cb_colors[0], marker='o', label='Boids' )
+    plt.scatter(c_separation_list, predators_history_parameter, color=cb_colors[7], marker='D', label='Predators' )
+    plt.scatter(c_separation_list, food_history_parameter, color=cb_colors[8], marker='P', label='Food')
+    plt.xlabel('$c_\mathrm{sep}$', fontsize=13)
+    plt.ylabel("Average population size", fontsize=13)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.legend(fontsize=12)
+    plt.savefig("pop_vs_separation.png", dpi=300)
     plt.show()
