@@ -34,12 +34,12 @@ N_predators = 5 # number of predators
 r_B = 20 # radius of boid sensing
 r_CB = 7 # radius for catching a boid
 v_predator = 6 # velocity
-reproduction_cutoff = 150  # health points required to reproduce
-healthGain = 30            # health points gained from eating a boid
+reproduction_cutoff = 200  # health points required to reproduce
+healthGain = 50            # health points gained from eating a boid
 
 #food parameters
-nFood = 50                 # number of food at start
-foodSpawnRate = 1/4        # spawns one food every 1/foodSpawnRate generations  
+nFood = 75                 # number of food at start
+foodSpawnRate = 1/5        # spawns one food every 1/foodSpawnRate generations  
 
 boids = [Boid(np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),np.clip(np.random.normal(L/2,L/8),0.01,L-0.01),v_boid,c_cohesion,c_alignment,c_separation,c_predators,c_food,dt,L) for _ in range(N_boids)]
 predators = [Predator(np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),np.random.uniform(L_pred,L-L_pred),v_predator,r_CB,L,dt) for _ in range(N_predators)]
